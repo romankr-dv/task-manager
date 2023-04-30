@@ -35,6 +35,9 @@
             "migrations/.gitignore"
         ]
     },
+    "shapecode/hidden-entity-type-bundle": {
+        "version": "5.2.0"
+    },
     "stof/doctrine-extensions-bundle": {
         "version": "1.7",
         "recipe": {
