@@ -1,0 +1,45 @@
+
+.history-action-list {
+  .column.task-column {
+    width: 280px;
+
+    .column-content {
+      .title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .btn {
+        display: none;
+        padding: 0 4px 0 4px;
+        margin: -2px -3px 0 8px;
+        float: right;
+      }
+
+      .btn .oi-clipboard {
+        margin: 0 -1px 0 1px;
+      }
+    }
+  }
+
+  .column.task-column:hover .column-content .btn {
+    display: block;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .column.task-column {
+      width: 200px;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    .column.task-column {
+      width: 120px;
+    }
+  }
+}
+
+.history-action-list.hidden-task-column .column.task-column {
+  display: none;
+}
