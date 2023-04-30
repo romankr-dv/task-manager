@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ChangePasswordCommand extends Command
 {
@@ -19,17 +19,17 @@ class ChangePasswordCommand extends Command
 
     private UserRepository $userRepository;
     private EntityManagerInterface $entityManager;
-    private UserPasswordEncoderInterface $passwordEncoder;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordHasher
     ) {
         parent::__construct();
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
     protected function configure(): void
@@ -48,7 +48,7 @@ class ChangePasswordCommand extends Command
             $output->writeln("User not found!");
             return Command::FAILURE;
         }
-        $password = $this->passwordEncoder->encodePassword($user, $plainPassword);
+        $password = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($password);
         $this->entityManager->flush();
         $output->writeln("User '{$user->getEmail()}' password was changed!");
