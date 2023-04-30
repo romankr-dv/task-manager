@@ -3,7 +3,6 @@
 namespace App\Builder;
 
 use App\Entity\Task;
-use App\Entity\User;
 use App\Entity\UserTaskSettings;
 
 class UserTaskSettingsBuilder
