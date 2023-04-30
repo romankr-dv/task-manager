@@ -17,7 +17,7 @@ services:
       retries: 3
       start_period: 30s
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-db_user}:${POSTGRES_PASSWORD:-db_password}@database:5432/${POSTGRES_DB:-db_name}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+      DATABASE_URL: mysql://${DATABASE_USER:-db_user}:${DATABASE_PASSWORD:-db_password}@database:3306/${DATABASE_DB:-db_name}?serverVersion=${DATABASE_VERSION:-5.7.33}&charset=${DATABASE_CHARSET:-utf8mb4}
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
@@ -58,15 +58,26 @@ services:
 
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-db_name}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-db_password}
-      POSTGRES_USER: ${POSTGRES_USER:-db_user}
+    image: mysql:5.7.33
+    ports:
+      - "3306:3306"
     volumes:
-      - ./docker/db/data:/var/lib/postgresql/data:rw
+      - "./docker/db/data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD:-db_password}
+      MYSQL_DATABASE: ${DATABASE_NAME:-db_name}
+      MYSQL_USER: ${DATABASE_USER:-db_user}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-db_password}
 ###< doctrine/doctrine-bundle ###
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: ${DATABASE_ROOT_PASSWORD:-db_password}
+    ports:
+      - "8080:80"
 
 volumes:
   php_socket:

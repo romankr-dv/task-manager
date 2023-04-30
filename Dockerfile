@@ -43,6 +43,8 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+    	zip \
+    	libzip-dev \
 	;
 
 RUN set -eux; \
@@ -61,6 +63,8 @@ RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
 	apk del .pgsql-deps
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
+
+RUN docker-php-ext-install pdo pdo_mysql zip mysqli
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link docker/php/conf.d/app.ini $PHP_INI_DIR/conf.d/
