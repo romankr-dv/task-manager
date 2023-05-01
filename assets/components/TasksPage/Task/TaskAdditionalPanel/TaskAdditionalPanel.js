@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import TaskStatusField from "./TaskStatusField/TaskStatusField";
 import TaskLinkField from "./TaskLinkField/TaskLinkField";
 import TaskReminderField from "./TaskReminderField/TaskReminderField";
@@ -12,10 +12,7 @@ import {Link} from "react-router-dom";
 import Helper from "../../../App/Helper";
 
 const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
-  const [isDescriptionHidden, setDescriptionHidden] = useState(!task.description)
-
   const onNewTaskClick = () => events.createNewTask(task.id);
-  const onDescriptionClick = () => setDescriptionHidden(false);
   const onRemoveTaskClick = () => events.removeTask(task.id);
   const createdAt = moment.unix(task.createdAt).format('DD/MM/YYYY HH:mm');
 
@@ -27,9 +24,6 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
         <TaskLinkField task={task} events={events}/>
       </div>
       <div className="additional-panel-buttons">
-        <TaskTimeTrackingButton task={task} isActive={isActive} events={events}/>
-        <Button onClick={onNewTaskClick} buttonStyle='secondary' buttonSize='sm'>New Task</Button>
-        <Button onClick={onDescriptionClick} buttonStyle='info' buttonSize='sm'>Description</Button>
         <span className="created-at">{createdAt}</span>
         <Link to={Helper.getHistoryPageUrl(task)}>
           <Button className="right-side-button" buttonSize='sm'><OpenIcon name="clock"/></Button>
@@ -37,7 +31,7 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
         <Button className="right-side-button" onClick={onRemoveTaskClick} buttonSize='sm'><OpenIcon
           name="trash"/></Button>
       </div>
-      {isDescriptionHidden ? null : <TaskDescriptionEditor task={task} events={events}/>}
+      <TaskDescriptionEditor task={task} events={events}/>
     </div>
   );
 }

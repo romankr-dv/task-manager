@@ -58,10 +58,16 @@
         }
     }
 
+    .field.link {
+        margin-right: 190px;
+    }
+
     .additional-panel-buttons {
         display: flex;
         row-gap: 5px;
         flex-wrap: wrap;
+        margin-top: -40px;
+        margin-bottom: 10px;
 
         .created-at {
             line-height: 18px;
