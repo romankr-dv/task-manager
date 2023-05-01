@@ -13,16 +13,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TaskResponseBuilder
 {
-    private UserTaskSettingsBuilder $settingsBuilder;
-    private JsonResponseBuilder $jsonResponseBuilder;
-
     public function __construct(
-        UserTaskSettingsBuilder $settingsBuilder,
-        JsonResponseBuilder $jsonResponseBuilder
-    ) {
-        $this->settingsBuilder = $settingsBuilder;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-    }
+        private UserTaskSettingsBuilder $settingsBuilder,
+        private JsonResponseBuilder $jsonResponseBuilder
+    ) {}
 
     public function buildStatusListResponse(TaskStatusCollection $collection): array
     {

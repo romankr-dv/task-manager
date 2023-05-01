@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     public function __construct(
-        private readonly TaskStatusConfig $taskStatusConfig
+        private TaskStatusConfig $taskStatusConfig
     ) {}
 
     #[Route('', name: 'app_index', methods: ['GET'])]

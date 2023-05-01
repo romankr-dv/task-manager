@@ -8,11 +8,9 @@ use App\Entity\User;
 
 class TaskBuilder
 {
-    private TaskConfig $taskConfig;
-
-    public function __construct(TaskConfig $taskConfig) {
-        $this->taskConfig = $taskConfig;
-    }
+    public function __construct(
+        private TaskConfig $taskConfig
+    ) {}
 
     public function buildNewTask(User $user, Task $parent): Task
     {

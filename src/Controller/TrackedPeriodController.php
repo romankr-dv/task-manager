@@ -17,11 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrackedPeriodController extends AbstractController
 {
     public function __construct(
-        private readonly TrackedPeriodRepository $trackedPeriodRepository,
-        private readonly JsonResponseBuilder $jsonResponseBuilder,
-        private readonly TaskPermissionChecker $taskPermissionChecker,
-        private readonly TrackedPeriodService $trackedPeriodService,
-        private readonly TrackedPeriodResponseComposer $responseComposer
+        private TrackedPeriodRepository $trackedPeriodRepository,
+        private JsonResponseBuilder $jsonResponseBuilder,
+        private TaskPermissionChecker $taskPermissionChecker,
+        private TrackedPeriodService $trackedPeriodService,
+        private TrackedPeriodResponseComposer $responseComposer
     ) {}
 
     #[Route('/{id}/start', name: 'app_task_start', methods: ['POST'])]

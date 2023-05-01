@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class SettingsController extends AbstractController
 {
     public function __construct(
-        private readonly SettingsResponseComposer $settingsResponseComposer
+        private SettingsResponseComposer $settingsResponseComposer
     ) {}
 
     #[Route('', name: 'app_api_settings', methods: ['GET'])]

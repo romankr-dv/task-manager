@@ -16,10 +16,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class HistoryController extends AbstractController
 {
     public function __construct(
-        private readonly HistoryResponseComposer $historyResponseComposer,
-        private readonly HistoryActionRepository $historyActionRepository,
-        private readonly TaskRepository $taskRepository,
-        private readonly JsonResponseBuilder $jsonResponseBuilder
+        private HistoryResponseComposer $historyResponseComposer,
+        private HistoryActionRepository $historyActionRepository,
+        private TaskRepository $taskRepository,
+        private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
     #[Route('', name: 'app_api_history', methods: ['GET'])]

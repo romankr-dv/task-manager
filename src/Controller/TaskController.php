@@ -22,13 +22,13 @@ class TaskController extends AbstractController
     private const STATUS_REQUEST_FIELD = 'status';
 
     public function __construct(
-        private readonly TaskRepository $taskRepository,
-        private readonly TaskResponseComposer $taskResponseComposer,
-        private readonly TaskStatusConfig $taskStatusConfig,
-        private readonly UserTaskSettingsBuilder $userTaskSettingsBuilder,
-        private readonly JsonResponseBuilder $jsonResponseBuilder,
-        private readonly TaskService $taskService,
-        private readonly TaskPermissionChecker $taskPermissionChecker
+        private TaskRepository $taskRepository,
+        private TaskResponseComposer $taskResponseComposer,
+        private TaskStatusConfig $taskStatusConfig,
+        private UserTaskSettingsBuilder $userTaskSettingsBuilder,
+        private JsonResponseBuilder $jsonResponseBuilder,
+        private TaskService $taskService,
+        private TaskPermissionChecker $taskPermissionChecker
     ) {}
 
     #[Route('', name: 'app_api_task_all', methods: ['GET'])]
