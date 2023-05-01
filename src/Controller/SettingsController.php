@@ -7,10 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER")
- * @Route("/internal-api/settings")
- */
+#[IsGranted('ROLE_USER')]
+#[Route('/internal-api/settings')]
 class SettingsController extends AbstractController
 {
     private SettingsResponseComposer $settingsResponseComposer;
@@ -20,9 +18,7 @@ class SettingsController extends AbstractController
         $this->settingsResponseComposer = $settingsResponseComposer;
     }
 
-    /**
-     * @Route("", name="app_api_settings", methods={"GET"})
-     */
+    #[Route('', name: 'app_api_settings', methods: ['GET'])]
     public function init(): JsonResponse
     {
         return $this->settingsResponseComposer->composeListResponse($this->getUser());
