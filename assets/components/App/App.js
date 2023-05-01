@@ -9,26 +9,62 @@ import Icon from "./Icon";
 import HistoryPage from "../HistoryPage/HistoryPage";
 
 const App = () => {
-    const renderTasksPage = (title, icon, url = "", nested = true) => {
-        let fetchFrom = Config.apiUrlPrefix + "/tasks" + url;
-        return <TasksPage title={title} icon={icon} fetchFrom={fetchFrom} nested={nested}/>
-    }
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/:root?/tasks/reminders" element={renderTasksPage("Reminders", <Icon name="bell"/>, "/reminders", false)} />
-                <Route path="/:root?/tasks/todo" element={renderTasksPage("Todo", <Icon name="flash"/>, "/todo")} />
-                <Route path="/:root?/tasks/status/progress" element={renderTasksPage("In Progress", <Icon name="flag"/>, "/status/progress", false)} />
-                <Route path="/:root?/tasks/status/frozen" element={renderTasksPage("Frozen", <Icon name="certificate"/>, "/status/frozen")} />
-                <Route path="/:root?/tasks/status/potential" element={renderTasksPage("Potential", <Icon name="calendar"/>, "/status/potential")} />
-                <Route path="/:root?/tasks/status/cancelled" element={renderTasksPage("Cancelled", <Icon name="remove"/>, "/status/cancelled")} />
-                <Route path="/:root?/tasks/status/completed" element={renderTasksPage("Completed", <Icon name="ok"/>, "/status/completed")} />
-                <Route path="/:root?/tasks" element={renderTasksPage("All Tasks", <Icon name="list-alt"/>)} />
+                <Route path="/:root?/tasks/reminders" element={<Reminders />}/>
+                <Route path="/:root?/tasks/todo" element={<Todo />} />
+                <Route path="/:root?/tasks/status/progress" element={<InProgress />} />
+                <Route path="/:root?/tasks/status/frozen" element={<Frozen />} />
+                <Route path="/:root?/tasks/status/potential" element={<Potential />} />
+                <Route path="/:root?/tasks/status/cancelled" element={<Cancelled />} />
+                <Route path="/:root?/tasks/status/completed" element={<Completed />} />
+                <Route path="/:root?/tasks" element={<AllTasks />} />
                 <Route path="/settings" element={<SettingsPage/>} />
                 <Route path="/:task?/history" element={<HistoryPage/>} />
             </Routes>
         </BrowserRouter>
     );
+}
+
+const Reminders = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/reminders";
+  return <TasksPage title="Reminders" icon={<Icon name="bell"/>} fetchFrom={fetchFrom} nested={false}/>
+}
+
+const Todo = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/todo";
+  return <TasksPage title="Todo" icon={<Icon name="flash"/>} fetchFrom={fetchFrom} nested={true}/>
+}
+
+const InProgress = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/status/progress";
+  return <TasksPage title="In Progress" icon={<Icon name="flag"/>} fetchFrom={fetchFrom} nested={false}/>
+}
+
+const Frozen = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/status/frozen";
+  return <TasksPage title="Frozen" icon={<Icon name="certificate"/>} fetchFrom={fetchFrom} nested={true}/>
+}
+
+const Potential = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/status/potential";
+  return <TasksPage title="Potential" icon={<Icon name="calendar"/>} fetchFrom={fetchFrom} nested={true}/>
+}
+
+const Cancelled = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/status/cancelled";
+  return <TasksPage title="Cancelled" icon={<Icon name="remove"/>} fetchFrom={fetchFrom} nested={true}/>
+}
+
+const Completed = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks/status/completed";
+  return <TasksPage title="Completed" icon={<Icon name="ok"/>} fetchFrom={fetchFrom} nested={true}/>
+}
+
+const AllTasks = () => {
+  let fetchFrom = Config.apiUrlPrefix + "/tasks";
+  return <TasksPage title="All Tasks" icon={<Icon name="list-alt"/>} fetchFrom={fetchFrom} nested={true}/>
 }
 
 export default App;
