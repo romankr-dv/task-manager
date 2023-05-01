@@ -8,7 +8,7 @@ import TaskPanelHeading from "./TaskPanelHeading/TaskPanelHeading";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
 import TaskPanelFooter from "./TaskPanelFooter/TaskPanelFooter";
-import TasksCalendar from "./TasksCalendar/TasksCalendar";
+import TaskReminderCalendar from "./TaskReminderCalendar/TaskReminderCalendar";
 import LocalStorage from "../App/LocalStorage";
 
 const TasksPage = ({title, icon, fetchFrom, nested}) => {
@@ -208,7 +208,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
     return (
         <Page sidebar={{root: root, onSearch:setSearch, reminderNumber:reminderNumber}}>
             <TaskPanelHeading title={title} icon={icon} root={root} events={events}/>
-            {showCalendar ? <TasksCalendar tasks={tasks} statuses={statuses} events={events} /> : null}
+            {showCalendar ? <TaskReminderCalendar tasks={tasks} statuses={statuses} events={events} /> : null}
             <PanelBody>
                 <TaskListWrapper data={{
                     root: root,

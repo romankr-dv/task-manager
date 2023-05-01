@@ -3,11 +3,11 @@ import React from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import './TasksCalendar.scss';
+import './TaskReminderCalendar.scss';
 import moment from "moment";
 import Config from "../../App/Config";
 
-const TasksCalendar = ({tasks, statuses, events}) => {
+const TaskReminderCalendar = ({tasks, statuses, events}) => {
     const reminders = tasks ? tasks.filter(task => !task.isHidden && task.reminder) : [];
     const calendarEvents = reminders.map(task => {
         const date = new Date(task.reminder * 1000);
@@ -43,4 +43,4 @@ const TasksCalendar = ({tasks, statuses, events}) => {
     );
 }
 
-export default TasksCalendar;
+export default TaskReminderCalendar;
