@@ -13,14 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:move-task')]
 class MoveTaskCommand extends Command
 {
-    private TaskRepository $taskRepository;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private TaskRepository $taskRepository,
+        private EntityManagerInterface $entityManager
+    ) {
         parent::__construct();
-        $this->taskRepository = $taskRepository;
-        $this->entityManager = $entityManager;
     }
 
     protected function configure(): void

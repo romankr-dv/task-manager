@@ -17,19 +17,12 @@ class ChangePasswordCommand extends Command
     private const USER_ID_ARGUMENT = 'userId';
     private const PASSWORD_ARGUMENT = 'password';
 
-    private UserRepository $userRepository;
-    private EntityManagerInterface $entityManager;
-    private UserPasswordHasherInterface $passwordHasher;
-
     public function __construct(
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        private UserRepository $userRepository,
+        private EntityManagerInterface $entityManager,
+        private UserPasswordHasherInterface $passwordHasher
     ) {
         parent::__construct();
-        $this->userRepository = $userRepository;
-        $this->entityManager = $entityManager;
-        $this->passwordHasher = $passwordHasher;
     }
 
     protected function configure(): void

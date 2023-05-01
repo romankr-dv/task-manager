@@ -17,16 +17,11 @@ class CreateUserCommand extends Command
     private const EMAIL_ARGUMENT = 'email';
     private const PASSWORD_ARGUMENT = 'password';
 
-    private EntityManagerInterface $entityManager;
-    private UserPasswordHasherInterface $passwordHasher;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        private EntityManagerInterface $entityManager,
+        private UserPasswordHasherInterface $passwordHasher
     ) {
         parent::__construct();
-        $this->entityManager = $entityManager;
-        $this->passwordHasher = $passwordHasher;
     }
 
     protected function configure(): void

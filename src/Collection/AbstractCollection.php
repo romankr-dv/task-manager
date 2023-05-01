@@ -8,12 +8,7 @@ use IteratorAggregate;
 
 abstract class AbstractCollection implements IteratorAggregate
 {
-    protected array $list;
-
-    public function __construct(array $list)
-    {
-        $this->list = $list;
-    }
+    public function __construct(protected array $list) {}
 
     /**
      * @return Iterator
