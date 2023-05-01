@@ -1,18 +1,15 @@
 
 import React from 'react';
-import PanelHeading from "../../Page/PanelHeading/PanelHeading";
+import PanelHeading from "../../App/PanelHeading/PanelHeading";
 import Button from "../../App/Button";
-import PanelHeadingTask from "../../Page/PanelHeading/PanelHeadingTask/PanelHeadingTask";
+import PanelHeadingTask from "../../App/PanelHeading/PanelHeadingTask/PanelHeadingTask";
 import OpenIcon from "../../App/OpenIcon";
 
 const HistoryPanelHeading = ({title, icon, task, events}) => {
     return (
         <PanelHeading title={title} icon={icon}>
-            { task ? <PanelHeadingTask task={task}/> : null }
-            <div>
-                <Button onClick={events.reload}><OpenIcon name="reload"/></Button>
-                <Button onClick={() => console.log('todo')}><OpenIcon name="chevron-left"/></Button>
-            </div>
+            { task ? <PanelHeadingTask task={task} backLink={'/history'}/> : null }
+            <Button onClick={events.reload}><OpenIcon name="reload"/></Button>
         </PanelHeading>
     );
 }

@@ -1,10 +1,10 @@
 
 import React, {useLayoutEffect, useState} from 'react';
-import PanelHeading from "../Page/PanelHeading/PanelHeading";
+import PanelHeading from "../App/PanelHeading/PanelHeading";
 import Helper from "../App/Helper";
 import Config from "../App/Config";
-import Page from "../Page/Page";
-import PanelBody from "../Page/PanelBody/PanelBody";
+import Page from "../App/Page";
+import PanelBody from "../App/PanelBody/PanelBody";
 import Icon from "../App/Icon";
 import LocalStorage from "../App/LocalStorage";
 
