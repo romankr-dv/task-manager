@@ -11,32 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER")
- * @Route("/internal-api/history")
- */
+#[IsGranted('ROLE_USER')]
+#[Route('/internal-api/history')]
 class HistoryController extends AbstractController
 {
-    private HistoryResponseComposer $historyResponseComposer;
-    private HistoryActionRepository $historyActionRepository;
-    private TaskRepository $taskRepository;
-    private JsonResponseBuilder $jsonResponseBuilder;
-
     public function __construct(
-        HistoryResponseComposer $historyResponseComposer,
-        HistoryActionRepository $historyActionRepository,
-        TaskRepository $taskRepository,
-        JsonResponseBuilder $jsonResponseBuilder
-    ) {
-        $this->historyResponseComposer = $historyResponseComposer;
-        $this->historyActionRepository = $historyActionRepository;
-        $this->taskRepository = $taskRepository;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-    }
+        private readonly HistoryResponseComposer $historyResponseComposer,
+        private readonly HistoryActionRepository $historyActionRepository,
+        private readonly TaskRepository $taskRepository,
+        private readonly JsonResponseBuilder $jsonResponseBuilder
+    ) {}
 
-    /**
-     * @Route("", name="app_api_history", methods={"GET"})
-     */
+    #[Route('', name: 'app_api_history', methods: ['GET'])]
     public function init(Request $request): JsonResponse
     {
         $taskId = $request->query->get('task');

@@ -11,12 +11,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 #[Route('/internal-api/settings')]
 class SettingsController extends AbstractController
 {
-    private SettingsResponseComposer $settingsResponseComposer;
-
-    public function __construct(SettingsResponseComposer $settingsResponseComposer)
-    {
-        $this->settingsResponseComposer = $settingsResponseComposer;
-    }
+    public function __construct(
+        private readonly SettingsResponseComposer $settingsResponseComposer
+    ) {}
 
     #[Route('', name: 'app_api_settings', methods: ['GET'])]
     public function init(): JsonResponse

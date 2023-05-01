@@ -12,35 +12,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("internal-api/tasks")
- * @IsGranted("ROLE_USER")
- */
+#[IsGranted('ROLE_USER')]
+#[Route('/internal-api/tasks')]
 class TrackedPeriodController extends AbstractController
 {
-    private TrackedPeriodRepository $trackedPeriodRepository;
-    private JsonResponseBuilder $jsonResponseBuilder;
-    private TaskPermissionChecker $taskPermissionChecker;
-    private TrackedPeriodService $trackedPeriodService;
-    private TrackedPeriodResponseComposer $responseComposer;
-
     public function __construct(
-        TrackedPeriodRepository $trackedPeriodRepository,
-        JsonResponseBuilder $jsonResponseBuilder,
-        TaskPermissionChecker $taskPermissionChecker,
-        TrackedPeriodService $trackedPeriodService,
-        TrackedPeriodResponseComposer $responseComposer
-    ) {
-        $this->trackedPeriodRepository = $trackedPeriodRepository;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-        $this->taskPermissionChecker = $taskPermissionChecker;
-        $this->trackedPeriodService = $trackedPeriodService;
-        $this->responseComposer = $responseComposer;
-    }
+        private readonly TrackedPeriodRepository $trackedPeriodRepository,
+        private readonly JsonResponseBuilder $jsonResponseBuilder,
+        private readonly TaskPermissionChecker $taskPermissionChecker,
+        private readonly TrackedPeriodService $trackedPeriodService,
+        private readonly TrackedPeriodResponseComposer $responseComposer
+    ) {}
 
-    /**
-     * @Route("/{id}/start", name="app_task_start", methods={"POST"})
-     */
+    #[Route('/{id}/start', name: 'app_task_start', methods: ['POST'])]
     public function start(Task $task): JsonResponse
     {
         if (!$this->taskPermissionChecker->canTrackTask($this->getUser(), $task)) {
@@ -57,9 +41,7 @@ class TrackedPeriodController extends AbstractController
         return $this->responseComposer->compose($task);
     }
 
-    /**
-     * @Route("/{id}/finish", name="app_task_finish", methods={"POST"})
-     */
+    #[Route('/{id}/finish', name: 'app_task_finish', methods: ['POST'])]
     public function finish(Task $task): JsonResponse
     {
         $activePeriod = $this->trackedPeriodRepository->findActivePeriod($this->getUser());
