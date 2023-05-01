@@ -1,5 +1,5 @@
 # Task Manager
-Just task managing and time traking app.  
+Just task managing app.  
 
 Based on symfony docker template:  
 https://github.com/dunglas/symfony-docker
