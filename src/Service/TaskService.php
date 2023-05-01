@@ -19,34 +19,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class TaskService
 {
-    private TaskStatusConfig $taskStatusConfig;
-    private TaskRepository $taskRepository;
-    private TrackedPeriodRepository $trackedPeriodRepository;
-    private EntityManagerInterface $entityManager;
-    private TaskBuilder $taskBuilder;
-    private UserTaskSettingsRepository $userTaskSettingsRepository;
-    private HistoryActionBuilder $historyActionBuilder;
-    private HistoryActionMessageComposer $historyActionMessageComposer;
-
     public function __construct(
-        TaskStatusConfig $taskStatusConfig,
-        TaskRepository $taskRepository,
-        TrackedPeriodRepository $trackedPeriodRepository,
-        EntityManagerInterface $entityManager,
-        TaskBuilder $taskBuilder,
-        UserTaskSettingsRepository $userTaskSettingsRepository,
-        HistoryActionBuilder $historyActionBuilder,
-        HistoryActionMessageComposer $historyActionMessageComposer
-    ) {
-        $this->taskStatusConfig = $taskStatusConfig;
-        $this->taskRepository = $taskRepository;
-        $this->trackedPeriodRepository = $trackedPeriodRepository;
-        $this->entityManager = $entityManager;
-        $this->taskBuilder = $taskBuilder;
-        $this->userTaskSettingsRepository = $userTaskSettingsRepository;
-        $this->historyActionBuilder = $historyActionBuilder;
-        $this->historyActionMessageComposer = $historyActionMessageComposer;
-    }
+        private TaskStatusConfig $taskStatusConfig,
+        private TaskRepository $taskRepository,
+        private TrackedPeriodRepository $trackedPeriodRepository,
+        private EntityManagerInterface $entityManager,
+        private TaskBuilder $taskBuilder,
+        private UserTaskSettingsRepository $userTaskSettingsRepository,
+        private HistoryActionBuilder $historyActionBuilder,
+        private HistoryActionMessageComposer $historyActionMessageComposer
+    ) {}
 
     public function getTasksByStatus(User $user, string $statusSlug): TaskCollection
     {

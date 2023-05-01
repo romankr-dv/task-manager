@@ -11,16 +11,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TrackedPeriodService
 {
-    private EntityManagerInterface $entityManager;
-    private TaskRepository $taskRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        TaskRepository $taskRepository
-    ) {
-        $this->entityManager = $entityManager;
-        $this->taskRepository = $taskRepository;
-    }
+        private EntityManagerInterface $entityManager,
+        private TaskRepository $taskRepository
+    ) {}
 
     public function startPeriod(User $user, Task $task): void
     {
