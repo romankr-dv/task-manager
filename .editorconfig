@@ -34,7 +34,7 @@ indent_size = 4
 indent_style = tab
 indent_size = 4
 
-[*.xml{,.dist}]
+[*.{xml,xml.dist}]
 indent_style = space
 indent_size = 4
 
@@ -51,7 +51,7 @@ indent_size = 2
 indent_style = tab
 indent_size = 4
 
-[.php_cs{,.dist}]
+[.{php_cs,php_cs.dist}]
 indent_style = space
 indent_size = 4
 
@@ -63,7 +63,11 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 
-[docker-compose{,.*}.{yaml,yml}]
+[docker-compose.{yaml,yml}]
+indent_style = space
+indent_size = 2
+
+[docker-compose.*.{yaml,yml}]
 indent_style = space
 indent_size = 2
 
