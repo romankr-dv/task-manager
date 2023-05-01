@@ -13,7 +13,7 @@ npm run watch
 
 Initialize project:
 ```
-docker-compose up
+docker compose up
 docker exec -it task-manager_php_1 bin/console app:create-user test@email.com password
 ```
 
