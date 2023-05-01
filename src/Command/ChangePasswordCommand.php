@@ -4,18 +4,18 @@ namespace App\Command;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[AsCommand(name: 'app:change-password')]
 class ChangePasswordCommand extends Command
 {
     private const USER_ID_ARGUMENT = 'userId';
     private const PASSWORD_ARGUMENT = 'password';
-
-    protected static $defaultName = 'app:change-password';
 
     private UserRepository $userRepository;
     private EntityManagerInterface $entityManager;
