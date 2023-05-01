@@ -7,7 +7,7 @@ import TaskListWrapper from "./TaskListWrapper/TaskListWrapper";
 import TaskPanelHeading from "./TaskPanelHeading/TaskPanelHeading";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
-import TasksAmount from "./TasksAmount/TasksAmount";
+import TaskPanelFooter from "./TaskPanelFooter/TaskPanelFooter";
 import TasksCalendar from "./TasksCalendar/TasksCalendar";
 import LocalStorage from "../App/LocalStorage";
 
@@ -217,7 +217,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
                     statuses: statuses,
                     nested: nested
                 }} events={events} />
-                <TasksAmount tasks={tasks} />
+                <TaskPanelFooter tasks={tasks} />
             </PanelBody>
         </Page>
     );

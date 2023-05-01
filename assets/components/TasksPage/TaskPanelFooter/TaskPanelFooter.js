@@ -1,8 +1,8 @@
 
 import React from 'react';
-import './TasksAmount.scss';
+import './TaskPanelFooter.scss';
 
-const TasksAmount = ({tasks}) => {
+const TaskPanelFooter = ({tasks}) => {
     let amount = tasks ? tasks.filter(task => !task.isHidden).length : 0;
     if (!amount) {
         return null;
@@ -12,4 +12,4 @@ const TasksAmount = ({tasks}) => {
     );
 }
 
-export default TasksAmount;
+export default TaskPanelFooter;
