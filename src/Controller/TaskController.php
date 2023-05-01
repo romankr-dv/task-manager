@@ -10,67 +10,42 @@ use App\Config\TaskStatusConfig;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Service\TaskService;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @IsGranted("ROLE_USER")
- * @Route("/internal-api/tasks")
- */
+#[IsGranted('ROLE_USER')]
+#[Route('/internal-api/tasks')]
 class TaskController extends AbstractController
 {
     private const STATUS_REQUEST_FIELD = 'status';
 
-    private TaskRepository $taskRepository;
-    private TaskResponseComposer $taskResponseComposer;
-    private TaskStatusConfig $taskStatusConfig;
-    private UserTaskSettingsBuilder $userTaskSettingsBuilder;
-    private JsonResponseBuilder $jsonResponseBuilder;
-    private TaskService $taskService;
-    private TaskPermissionChecker $taskPermissionChecker;
-
     public function __construct(
-        TaskRepository $taskRepository,
-        TaskResponseComposer $taskResponseComposer,
-        TaskStatusConfig $taskStatusConfig,
-        UserTaskSettingsBuilder $userTaskSettingsBuilder,
-        JsonResponseBuilder $jsonResponseBuilder,
-        TaskService $taskService,
-        TaskPermissionChecker $taskPermissionChecker
-    ) {
-        $this->taskRepository = $taskRepository;
-        $this->taskResponseComposer = $taskResponseComposer;
-        $this->taskStatusConfig = $taskStatusConfig;
-        $this->userTaskSettingsBuilder = $userTaskSettingsBuilder;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-        $this->taskService = $taskService;
-        $this->taskPermissionChecker = $taskPermissionChecker;
-    }
+        private readonly TaskRepository $taskRepository,
+        private readonly TaskResponseComposer $taskResponseComposer,
+        private readonly TaskStatusConfig $taskStatusConfig,
+        private readonly UserTaskSettingsBuilder $userTaskSettingsBuilder,
+        private readonly JsonResponseBuilder $jsonResponseBuilder,
+        private readonly TaskService $taskService,
+        private readonly TaskPermissionChecker $taskPermissionChecker
+    ) {}
 
-    /**
-     * @Route("", name="app_api_task_all", methods={"GET"})
-     */
+    #[Route('', name: 'app_api_task_all', methods: ['GET'])]
     public function all(): JsonResponse
     {
         $tasks = $this->taskRepository->findUserTasks($this->getUser());
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
-    /**
-     * @Route("/reminders", name="app_api_task_reminders", methods={"GET"})
-     */
+    #[Route('/reminders', name: 'app_api_task_reminders', methods: ['GET'])]
     public function reminders(): JsonResponse
     {
         $tasks = $this->taskRepository->findUserReminders($this->getUser());
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
-    /**
-     * @Route("/todo", name="app_api_task_todo", methods={"GET"})
-     */
+    #[Route('/todo', name: 'app_api_task_todo', methods: ['GET'])]
     public function todo(): JsonResponse
     {
         $statusCollection = $this->taskStatusConfig->getTodoStatusCollection();
@@ -78,9 +53,7 @@ class TaskController extends AbstractController
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
-    /**
-     * @Route("/status/{status}", name="app_api_task_status", methods={"GET"})
-     */
+    #[Route('/status/{status}', name: 'app_api_task_status', methods: ['GET'])]
     public function status(Request $request): JsonResponse
     {
         $statusSlug = $request->attributes->get(self::STATUS_REQUEST_FIELD);
@@ -91,9 +64,7 @@ class TaskController extends AbstractController
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
-    /**
-     * @Route("/new", name="app_api_task_new", methods={"POST"})
-     */
+    #[Route('/new', name: 'app_api_task_new', methods: ['POST'])]
     public function new(Request $request): JsonResponse
     {
         $parent = $this->getParentFromRequest($request);
@@ -117,10 +88,7 @@ class TaskController extends AbstractController
         return $this->taskRepository->findOneBy(['id' => $request->request->get('parent')]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="app_api_task_edit", methods={"POST"})
-     * @throws Exception
-     */
+    #[Route('/{id}/edit', name: 'app_api_task_edit', methods: ['POST'])]
     public function edit(Task $task, Request $request): JsonResponse
     {
         $user = $this->getUser();
@@ -131,10 +99,7 @@ class TaskController extends AbstractController
         return $this->jsonResponseBuilder->build();
     }
 
-    /**
-     * @Route("/{id}/edit/settings", name="app_api_task_edit_settings", methods={"POST"})
-     * @throws Exception
-     */
+    #[Route('/{id}/edit/settings', name: 'app_api_task_edit_settings', methods: ['POST'])]
     public function editSettings(Task $task, Request $request): JsonResponse
     {
         if (!$this->taskPermissionChecker->canEditTask($this->getUser(), $task)) {
@@ -144,9 +109,7 @@ class TaskController extends AbstractController
         return $this->jsonResponseBuilder->build();
     }
 
-    /**
-     * @Route("/{id}/delete", name="app_api_task_delete", methods={"POST"})
-     */
+    #[Route('/{id}/delete', name: 'app_api_task_delete', methods: ['POST'])]
     public function delete(Task $task): JsonResponse
     {
         if (!$this->taskPermissionChecker->canDeleteTask($this->getUser(), $task)) {
