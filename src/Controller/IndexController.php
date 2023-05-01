@@ -37,7 +37,7 @@ class IndexController extends AbstractController
 
     #[Route('/tasks/status/{status}', name: 'app_task_status', methods: ['GET'])]
     #[Route('/{parent}/tasks/status/{status}', name: 'app_parent_task_status', requirements: ['parent' => '\d+'], methods: ['GET'])]
-    public function status(String $status): Response
+    public function status(string $status): Response
     {
         if (!$this->taskStatusConfig->isStatusSlugExisting($status)) {
             throw $this->createNotFoundException('Page not found!');

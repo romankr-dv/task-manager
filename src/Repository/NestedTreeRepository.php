@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Exception\InvalidArgumentException;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\TreeListener;
+use RuntimeException;
 
 /**
  * Class AbstractNesterTreeRepository
@@ -56,9 +57,8 @@ abstract class NestedTreeRepository extends ServiceEntityRepository
         $config = $this->treeListener->getConfiguration($this->_em, $meta->name);
 
         $qb = $this->getQueryBuilder();
-        $qb->select('node')
-            ->from($config['useObjectClass'], 'node')
-        ;
+        $qb->select('node');
+        $qb->from($config['useObjectClass'], 'node');
         if (null !== $node) {
             if ($node instanceof $meta->name) {
                 $wrapped = new EntityWrapper($node, $this->_em);
@@ -66,18 +66,18 @@ abstract class NestedTreeRepository extends ServiceEntityRepository
                     throw new InvalidArgumentException('Node is not managed by UnitOfWork');
                 }
                 if ($direct) {
-                    $qb->where($qb->expr()->eq('node.'.$config['parent'], ':pid'));
+                    $qb->where($qb->expr()->eq('node.' . $config['parent'], ':pid'));
                     $qb->setParameter('pid', $wrapped->getIdentifier());
                 } else {
                     $left = $wrapped->getPropertyValue($config['left']);
                     $right = $wrapped->getPropertyValue($config['right']);
                     if ($left && $right) {
-                        $qb->where($qb->expr()->lt('node.'.$config['right'], $right));
-                        $qb->andWhere($qb->expr()->gt('node.'.$config['left'], $left));
+                        $qb->where($qb->expr()->lt('node.' . $config['right'], $right));
+                        $qb->andWhere($qb->expr()->gt('node.' . $config['left'], $left));
                     }
                 }
                 if (isset($config['root'])) {
-                    $qb->andWhere($qb->expr()->eq('node.'.$config['root'], ':rid'));
+                    $qb->andWhere($qb->expr()->eq('node.' . $config['root'], ':rid'));
                     $qb->setParameter('rid', $wrapped->getPropertyValue($config['root']));
                 }
                 if ($includeNode) {
@@ -86,28 +86,28 @@ abstract class NestedTreeRepository extends ServiceEntityRepository
                     } catch (MappingException $e) {
                         $name = $this->_class->getName();
                         $message = "Class '$name' doesn't have an identifier or it has a composite primary key.";
-                        throw new \RuntimeException($message);
+                        throw new RuntimeException($message);
                     }
-                    $qb->where('('.$qb->getDqlPart('where').') OR node.'.$idField.' = :rootNode');
+                    $qb->where('(' . $qb->getDqlPart('where') . ') OR node.' . $idField . ' = :rootNode');
                     $qb->setParameter('rootNode', $node);
                 }
             } else {
                 throw new \InvalidArgumentException('Node is not related to this repository');
             }
         } else if ($direct) {
-            $qb->where($qb->expr()->isNull('node.'.$config['parent']));
+            $qb->where($qb->expr()->isNull('node.' . $config['parent']));
         }
         if (!$sortByField) {
-            $qb->orderBy('node.'.$config['left'], 'ASC');
+            $qb->orderBy('node.' . $config['left'], 'ASC');
         } elseif (is_array($sortByField)) {
             $fields = '';
             foreach ($sortByField as $field) {
-                $fields .= 'node.'.$field.',';
+                $fields .= 'node.' . $field . ',';
             }
             $fields = rtrim($fields, ',');
             $qb->orderBy($fields, $direction);
         } else if ($meta->hasField($sortByField) && in_array(strtolower($direction), ['asc', 'desc'])) {
-            $qb->orderBy('node.'.$sortByField, $direction);
+            $qb->orderBy('node.' . $sortByField, $direction);
         } else {
             $message = "Invalid sort options specified: field - $sortByField, direction - $direction";
             throw new InvalidArgumentException($message);
@@ -134,15 +134,14 @@ abstract class NestedTreeRepository extends ServiceEntityRepository
         $left = $wrapped->getPropertyValue($config['left']);
         $right = $wrapped->getPropertyValue($config['right']);
         $qb = $this->getQueryBuilder();
-        $qb->select('node')
-            ->from($config['useObjectClass'], 'node')
-            ->where($qb->expr()->lte('node.'.$config['left'], $left))
-            ->andWhere($qb->expr()->gte('node.'.$config['right'], $right))
-            ->orderBy('node.'.$config['left'], 'ASC')
-        ;
+        $qb->select('node');
+        $qb->from($config['useObjectClass'], 'node');
+        $qb->where($qb->expr()->lte('node.' . $config['left'], $left));
+        $qb->andWhere($qb->expr()->gte('node.' . $config['right'], $right));
+        $qb->orderBy('node.' . $config['left'], 'ASC');
         if (isset($config['root'])) {
             $rootId = $wrapped->getPropertyValue($config['root']);
-            $qb->andWhere($qb->expr()->eq('node.'.$config['root'], ':rid'));
+            $qb->andWhere($qb->expr()->eq('node.' . $config['root'], ':rid'));
             $qb->setParameter('rid', $rootId);
         }
 

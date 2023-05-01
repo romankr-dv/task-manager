@@ -211,7 +211,7 @@ class Task
 
     public function isReminder(): bool
     {
-        if(empty($this->reminder)) {
+        if (empty($this->reminder)) {
             return false;
         }
         return $this->reminder->getTimestamp() < (new DateTime())->getTimestamp();

@@ -53,8 +53,7 @@ class TaskRepository extends NestedTreeRepository
             ->setParameters(['user' => $user, 'time' => new DateTime()])
             ->orderBy("CASE WHEN t.reminder < :time THEN 1 ELSE 0 END", "DESC")
             ->addOrderBy($compiledStatusOrder, "ASC")
-            ->addOrderBy("t.id", "DESC")
-        ;
+            ->addOrderBy("t.id", "DESC");
     }
 
     public function findUserTasks(User $user): TaskCollection
