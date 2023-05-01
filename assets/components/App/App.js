@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Config from "./../App/Config";
@@ -9,22 +8,22 @@ import Icon from "./Icon";
 import HistoryPage from "../HistoryPage/HistoryPage";
 
 const App = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/:root?/tasks/reminders" element={<Reminders />}/>
-                <Route path="/:root?/tasks/todo" element={<Todo />} />
-                <Route path="/:root?/tasks/status/progress" element={<InProgress />} />
-                <Route path="/:root?/tasks/status/frozen" element={<Frozen />} />
-                <Route path="/:root?/tasks/status/potential" element={<Potential />} />
-                <Route path="/:root?/tasks/status/cancelled" element={<Cancelled />} />
-                <Route path="/:root?/tasks/status/completed" element={<Completed />} />
-                <Route path="/:root?/tasks" element={<AllTasks />} />
-                <Route path="/settings" element={<SettingsPage/>} />
-                <Route path="/:task?/history" element={<HistoryPage/>} />
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/:root?/tasks/reminders" element={<Reminders/>}/>
+        <Route path="/:root?/tasks/todo" element={<Todo/>}/>
+        <Route path="/:root?/tasks/status/progress" element={<InProgress/>}/>
+        <Route path="/:root?/tasks/status/frozen" element={<Frozen/>}/>
+        <Route path="/:root?/tasks/status/potential" element={<Potential/>}/>
+        <Route path="/:root?/tasks/status/cancelled" element={<Cancelled/>}/>
+        <Route path="/:root?/tasks/status/completed" element={<Completed/>}/>
+        <Route path="/:root?/tasks" element={<AllTasks/>}/>
+        <Route path="/settings" element={<SettingsPage/>}/>
+        <Route path="/:task?/history" element={<HistoryPage/>}/>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 const Reminders = () => {

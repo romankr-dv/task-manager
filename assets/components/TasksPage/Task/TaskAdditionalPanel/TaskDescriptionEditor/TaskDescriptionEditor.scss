@@ -1,19 +1,19 @@
 
 .task {
-  .task-description-editor {
-    margin-top: 15px;
-    overflow: hidden;
-  }
+    .task-description-editor {
+        margin-top: 15px;
+        overflow: hidden;
+    }
 
-  .task-description-editor .mde-preview {
-    background: #fff;
-  }
+    .task-description-editor .mde-preview {
+        background: #fff;
+    }
 
-  .task-description-editor.changing .mde-text {
-    background: var(--changing-color);
-  }
+    .task-description-editor.changing .mde-text {
+        background: var(--changing-color);
+    }
 
-  .mde-header ul.mde-header-group {
-    padding: 6px;
-  }
+    .mde-header ul.mde-header-group {
+        padding: 6px;
+    }
 }

@@ -1,25 +1,25 @@
 
 .history-action-list {
-  .column.clickable {
-    cursor: pointer;
-  }
-
-  .column.clickable:hover {
-    background: lightyellow;
-  }
-
-  .column {
-    padding: 0;
-    border-bottom: none;
-
-    .column-content {
-      margin: 8px 12px;
-      word-break: break-word;
-      width: inherit;
+    .column.clickable {
+        cursor: pointer;
     }
-  }
 
-  .column.merged-column {
-    border-top: none;
-  }
+    .column.clickable:hover {
+        background: lightyellow;
+    }
+
+    .column {
+        padding: 0;
+        border-bottom: none;
+
+        .column-content {
+            margin: 8px 12px;
+            word-break: break-word;
+            width: inherit;
+        }
+    }
+
+    .column.merged-column {
+        border-top: none;
+    }
 }
