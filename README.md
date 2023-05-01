@@ -1,5 +1,6 @@
 # task-manager
-:zap: Just task managing and time traking app.  
+Just task managing and time traking app.  
+
 Based on symfony docker template:  
 https://github.com/dunglas/symfony-docker
 
