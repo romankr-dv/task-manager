@@ -7,12 +7,9 @@ use DateTimeInterface;
 
 class HistoryActionMessageComposer
 {
-    private TaskStatusConfig $taskStatusConfig;
-
-    public function __construct(TaskStatusConfig $taskStatusConfig)
-    {
-        $this->taskStatusConfig = $taskStatusConfig;
-    }
+    public function __construct(
+        private TaskStatusConfig $taskStatusConfig
+    ) {}
 
     public function composeNewTaskMessage(): string
     {

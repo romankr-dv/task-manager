@@ -12,19 +12,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HistoryResponseComposer
 {
-    private TaskRepository $taskRepository;
-    private JsonResponseBuilder $jsonResponseBuilder;
-    private HistoryActionResponseBuilder $historyActionResponseBuilder;
-
     public function __construct(
-        TaskRepository $taskRepository,
-        JsonResponseBuilder $jsonResponseBuilder,
-        HistoryActionResponseBuilder $historyActionResponseBuilder
-    ) {
-        $this->taskRepository = $taskRepository;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-        $this->historyActionResponseBuilder = $historyActionResponseBuilder;
-    }
+        private TaskRepository $taskRepository,
+        private JsonResponseBuilder $jsonResponseBuilder,
+        private HistoryActionResponseBuilder $historyActionResponseBuilder
+    ) {}
 
     public function composeListResponse(User $user, HistoryActionCollection $actions, ?Task $task): JsonResponse
     {

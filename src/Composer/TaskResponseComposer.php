@@ -16,28 +16,14 @@ use App\Entity\UserTaskSettings;
 
 class TaskResponseComposer
 {
-    private TaskResponseBuilder $taskResponseBuilder;
-    private TaskRepository $taskRepository;
-    private UserTaskSettingsRepository $settingsRepository;
-    private TrackedPeriodRepository $trackedPeriodRepository;
-    private TaskStatusConfig $taskStatusConfig;
-    private JsonResponseBuilder $jsonResponseBuilder;
-
     public function __construct(
-        TaskResponseBuilder $taskResponseBuilder,
-        TaskRepository $taskRepository,
-        UserTaskSettingsRepository $settingsRepository,
-        TrackedPeriodRepository $trackedPeriodRepository,
-        TaskStatusConfig $taskStatusConfig,
-        JsonResponseBuilder $jsonResponseBuilder
-    ) {
-        $this->taskResponseBuilder = $taskResponseBuilder;
-        $this->taskRepository = $taskRepository;
-        $this->settingsRepository = $settingsRepository;
-        $this->trackedPeriodRepository = $trackedPeriodRepository;
-        $this->taskStatusConfig = $taskStatusConfig;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-    }
+        private TaskResponseBuilder $taskResponseBuilder,
+        private TaskRepository $taskRepository,
+        private UserTaskSettingsRepository $settingsRepository,
+        private TrackedPeriodRepository $trackedPeriodRepository,
+        private TaskStatusConfig $taskStatusConfig,
+        private JsonResponseBuilder $jsonResponseBuilder
+    ) {}
 
     public function composeListResponse(User $user, TaskCollection $tasks): JsonResponse
     {

@@ -9,14 +9,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrackedPeriodResponseComposer
 {
-    private TaskRepository $taskRepository;
-    private JsonResponseBuilder $jsonResponseBuilder;
-
-    public function __construct(TaskRepository $taskRepository, JsonResponseBuilder $jsonResponseBuilder)
-    {
-        $this->taskRepository = $taskRepository;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-    }
+    public function __construct(
+        private TaskRepository $taskRepository,
+        private JsonResponseBuilder $jsonResponseBuilder
+    ) {}
 
     public function compose(Task $task): JsonResponse
     {

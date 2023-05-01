@@ -9,16 +9,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SettingsResponseComposer
 {
-    private TaskRepository $taskRepository;
-    private JsonResponseBuilder $jsonResponseBuilder;
-
     public function __construct(
-        TaskRepository $taskRepository,
-        JsonResponseBuilder $jsonResponseBuilder
-    ) {
-        $this->taskRepository = $taskRepository;
-        $this->jsonResponseBuilder = $jsonResponseBuilder;
-    }
+        private TaskRepository $taskRepository,
+        private JsonResponseBuilder $jsonResponseBuilder
+    ) {}
 
     public function composeListResponse(User $user): JsonResponse
     {
