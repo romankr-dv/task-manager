@@ -21,15 +21,15 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
       <div className="fields">
         <TaskStatusField task={task} statuses={statuses} events={events}/>
         <TaskReminderField task={task} events={events}/>
-        <TaskLinkField task={task} events={events}/>
-      </div>
-      <div className="additional-panel-buttons">
-        <span className="created-at">{createdAt}</span>
-        <Link to={Helper.getHistoryPageUrl(task)}>
-          <Button className="right-side-button" buttonSize='sm'><OpenIcon name="clock"/></Button>
-        </Link>
-        <Button className="right-side-button" onClick={onRemoveTaskClick} buttonSize='sm'><OpenIcon
-          name="trash"/></Button>
+        <div className="additional-panel-bottom">
+          <TaskLinkField task={task} events={events}/>
+          <span className="created-at">{createdAt}</span>
+          <Link to={Helper.getHistoryPageUrl(task)}>
+            <Button className="right-side-button" buttonSize='sm'><OpenIcon name="clock"/></Button>
+          </Link>
+          <Button className="right-side-button" onClick={onRemoveTaskClick} buttonSize='sm'><OpenIcon
+            name="trash"/></Button>
+        </div>
       </div>
       <TaskDescriptionEditor task={task} events={events}/>
     </div>

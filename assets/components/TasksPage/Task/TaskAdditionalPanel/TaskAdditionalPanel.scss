@@ -2,22 +2,22 @@
 .task {
     .additional-panel {
         margin-bottom: 14px;
-        margin-top: -4px;
+        margin-top: -2px;
     }
 
     .fields {
-        margin-bottom: 9px;
+        margin-bottom: 12px;
     }
 
     .field {
         height: 24px;
-        margin: 2px 0;
+        margin-bottom: 2px;
         display: flex;
 
         span {
             padding-top: 2px;
             font-weight: 700;
-            margin-right: 5px;
+            margin-right: 6px;
         }
 
         input, select {
@@ -58,27 +58,26 @@
         }
     }
 
-    .field.link {
-        margin-right: 190px;
-    }
-
-    .additional-panel-buttons {
+    .additional-panel-bottom {
         display: flex;
         row-gap: 5px;
         flex-wrap: wrap;
-        margin-top: -40px;
-        margin-bottom: 10px;
+
+        .field.link {
+            flex: 1;
+            line-height: 22px;
+        }
 
         .created-at {
-            line-height: 18px;
-            margin: 10px 8px 0 auto;
+            line-height: 24px;
+            margin: 0 8px 0 16px;
         }
 
         .btn.right-side-button {
             height: 24px;
             width: 24px;
             padding: 2px 0 0 1px;
-            margin: 6px 1px 0 4px;
+            margin: 0 1px 0 4px;
 
             .oi-trash {
                 margin-left: 1px;
