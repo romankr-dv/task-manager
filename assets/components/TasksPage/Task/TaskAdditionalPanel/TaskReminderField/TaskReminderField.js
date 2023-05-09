@@ -22,7 +22,7 @@ const TaskReminderField = ({task, events}) => {
 
   return (
     <div className="field reminder">
-      <span>Reminder:</span>
+      <span className="field-label">Reminder:</span>
       <input
         className="form-control form-control-plaintext"
         type="datetime-local"

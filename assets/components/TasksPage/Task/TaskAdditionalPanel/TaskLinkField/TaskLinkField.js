@@ -6,7 +6,7 @@ const TaskLinkField = ({task, events, children}) => {
   const onLinkChange = event => events.updateTaskLink(task.id, event.target.value, setLinkChanging);
   return (
     <div className="field link">
-      <span>Link:</span>
+      <span className="field-label">Link:</span>
       <input type="text" value={task.link ?? ''} onChange={onLinkChange} className={linkClassName}/>
       <div className="field-children">{children}</div>
     </div>

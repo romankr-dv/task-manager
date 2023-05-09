@@ -8,7 +8,7 @@ const TaskStatusField = ({task, statuses, events}) => {
   });
   return (
     <div className="field status">
-      <span>Status:</span>
+      <span className="field-label">Status:</span>
       <select value={task.status} onChange={onStatusChange}>
         {renderOptions()}
       </select>
