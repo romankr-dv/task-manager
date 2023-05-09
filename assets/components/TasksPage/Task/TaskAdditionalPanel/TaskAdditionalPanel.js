@@ -24,11 +24,12 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
         <div className="additional-panel-bottom">
           <TaskLinkField task={task} events={events}/>
           <span className="created-at">{createdAt}</span>
+          <TaskTimeTrackingButton task={task} isActive={isActive} events={events}/>
+          <Button onClick={onNewTaskClick} buttonSize='sm'><OpenIcon name="plus"/></Button>
           <Link to={Helper.getHistoryPageUrl(task)}>
-            <Button className="right-side-button" buttonSize='sm'><OpenIcon name="clock"/></Button>
+            <Button buttonSize='sm'><OpenIcon name="clock"/></Button>
           </Link>
-          <Button className="right-side-button" onClick={onRemoveTaskClick} buttonSize='sm'><OpenIcon
-            name="trash"/></Button>
+          <Button onClick={onRemoveTaskClick} buttonSize='sm'><OpenIcon name="trash"/></Button>
         </div>
       </div>
       <TaskDescriptionEditor task={task} events={events}/>
