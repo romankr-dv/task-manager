@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({onClick, className, buttonStyle, buttonSize, onFocus, children}) => {
+const Button = ({onClick, className, buttonStyle, buttonSize, onFocus, tooltip, children}) => {
   buttonStyle = buttonStyle ?? 'default';
   const prepareClassName = () => {
     let preparedClassName = ' btn btn-' + buttonStyle + ' ';
@@ -19,7 +19,11 @@ const Button = ({onClick, className, buttonStyle, buttonSize, onFocus, children}
     e.target.blur();
   }
   return (
-    <button onClick={onClick} className={prepareClassName()} onFocus={wrappedOnFocus}>
+    <button onClick={onClick}
+            className={prepareClassName()}
+            onFocus={wrappedOnFocus}
+            data-tooltip-id="basic-tooltip"
+            data-tooltip-content={tooltip}>
       {children}
     </button>
   );

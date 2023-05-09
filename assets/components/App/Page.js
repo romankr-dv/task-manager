@@ -1,6 +1,8 @@
 import React from 'react';
 import Header from "./Header/Header";
 import Sidebar from "./Sidebar/Sidebar";
+import {Tooltip} from "react-tooltip";
+import 'react-tooltip/dist/react-tooltip.css'
 
 const Page = ({children, sidebar}) => {
   return (
@@ -16,6 +18,7 @@ const Page = ({children, sidebar}) => {
           </div>
         </div>
       </div>
+      <Tooltip id="basic-tooltip" />
     </div>
   );
 }

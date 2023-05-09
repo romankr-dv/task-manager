@@ -35,6 +35,7 @@
         "react-dom": "^18.2.0",
         "react-mde": "^11.5.0",
         "react-router-dom": "^6.11.0",
+        "react-tooltip": "^5.11.2",
         "showdown": "^2.1.0"
     }
 }
