@@ -12,7 +12,7 @@ const TaskDescriptionEditor = ({task, events}) => {
     tasklists: true
   });
   const [isDescriptionChanging, setDescriptionChanging] = useState(false);
-  const [selectedTab, setSelectedTab] = React.useState("preview");
+  const [selectedTab, setSelectedTab] = React.useState(task.description ? "preview" : "write");
   return (
     <div className={"task-description-editor " + (isDescriptionChanging ? "changing" : "")}>
       <ReactMde
@@ -21,7 +21,7 @@ const TaskDescriptionEditor = ({task, events}) => {
         selectedTab={selectedTab}
         onTabChange={setSelectedTab}
         minEditorHeight={210}
-        minPreviewHeight={32}
+        minPreviewHeight={200}
         generateMarkdownPreview={markdown =>
           Promise.resolve(converter.makeHtml(markdown))
         }
