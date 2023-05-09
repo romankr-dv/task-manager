@@ -7,8 +7,8 @@ https://github.com/dunglas/symfony-docker
 ## Setup
 Build react files:
 ```
-npm install --force
-npm run watch 
+yarn
+yar watch 
 ```
 
 Initialize project:
