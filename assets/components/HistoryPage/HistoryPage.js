@@ -8,7 +8,7 @@ import LocalStorage from "../App/LocalStorage";
 import ActionList from "./ActionList/ActionList";
 import {useParams} from "react-router-dom";
 import HistoryPanelHeading from "./HistoryPanelHeading/HistoryPanelHeading";
-import InfiniteScroll from "react-infinite-scroller";
+import LazyLoading from "../App/LazyLoading";
 
 const HistoryPage = () => {
   const title = "History";
@@ -67,16 +67,13 @@ const HistoryPage = () => {
   useLayoutEffect(events.init, [params.task]);
   useLayoutEffect(events.onSearchUpdate, [search]);
 
-  const hasMore = startFrom != null;
-  const loader = <div className="loader">Loading ...</div>
-
   return (
     <Page sidebar={{root: null, onSearch: setSearch, reminderNumber: reminderNumber}}>
       <HistoryPanelHeading title={title} icon={icon} task={task} events={events}/>
       <PanelBody>
-        <InfiniteScroll pageStart={0} loadMore={events.loadMore} hasMore={hasMore} loader={loader}>
+        <LazyLoading loadMore={events.loadMore} hasMore={startFrom != null}>
           <ActionList actions={actions} events={events} task={task}/>
-        </InfiniteScroll>
+        </LazyLoading>
       </PanelBody>
     </Page>
   );
