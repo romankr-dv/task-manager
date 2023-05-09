@@ -34,6 +34,7 @@ const HistoryPage = () => {
               setReminderNumber(response.reminderNumber);
               setStartFrom(response.startFrom);
               LocalStorage.setReminderNumber(reminderNumber);
+              setFetching(false);
             });
         }
       },
@@ -44,6 +45,7 @@ const HistoryPage = () => {
             .then(response => {
               setActions([...actions, ...response.actions]);
               setStartFrom(response.startFrom);
+              setFetching(false);
             });
         }
       },
