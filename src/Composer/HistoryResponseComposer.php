@@ -18,15 +18,36 @@ class HistoryResponseComposer
         private HistoryActionResponseBuilder $historyActionResponseBuilder
     ) {}
 
-    public function composeListResponse(User $user, HistoryActionCollection $actions, ?Task $task): JsonResponse
-    {
+    public function composeResponse(
+        User $user,
+        HistoryActionCollection $actions,
+        ?Task $task,
+        int $startFrom
+    ): JsonResponse {
+        $nextStartFrom = $this->getNextStartFrom($actions, $startFrom);
         $includeActionTask = $task === null;
+        $actionResponse = $this->historyActionResponseBuilder->buildActionListResponse($actions, $includeActionTask);
+        if ($startFrom > 0) {
+            return $this->jsonResponseBuilder->build([
+                'actions' => $actionResponse,
+                'startFrom' => $nextStartFrom
+            ]);
+        }
         $reminderNumber = $this->taskRepository->countUserReminders($user);
         return $this->jsonResponseBuilder->build([
-            'actions' => $this->historyActionResponseBuilder->buildActionListResponse($actions, $includeActionTask),
+            'actions' => $actionResponse,
             'reminderNumber' => $reminderNumber,
-            'task' => $task ? $this->composeTaskResponse($task) : null
+            'task' => $task ? $this->composeTaskResponse($task) : null,
+            'startFrom' => $nextStartFrom
         ]);
+    }
+
+    private function getNextStartFrom(HistoryActionCollection $actions, int $startFrom): ?int
+    {
+        if ($actions->isEmpty()) {
+            return null;
+        }
+        return $startFrom + $actions->count();
     }
 
     private function composeTaskResponse(Task $task): array

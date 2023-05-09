@@ -22,23 +22,25 @@ class HistoryActionRepository extends ServiceEntityRepository
         parent::__construct($registry, HistoryAction::class);
     }
 
-    public function findByUser(User $user): HistoryActionCollection
+    public function findByUser(User $user, int $startFrom, int $limit): HistoryActionCollection
     {
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->andWhere('a.user = :user');
         $queryBuilder->setParameter('user', $user);
         $queryBuilder->orderBy('a.id', 'DESC');
-//        $queryBuilder->setMaxResults(30);
+        $queryBuilder->setFirstResult($startFrom);
+        $queryBuilder->setMaxResults($limit);
         return new HistoryActionCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findByTask(Task $task): HistoryActionCollection
+    public function findByTask(Task $task, int $startFrom, int $limit): HistoryActionCollection
     {
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->andWhere('a.task = :task');
         $queryBuilder->setParameter('task', $task);
         $queryBuilder->orderBy('a.id', 'DESC');
-//        $queryBuilder->setMaxResults(30);
+        $queryBuilder->setFirstResult($startFrom);
+        $queryBuilder->setMaxResults($limit);
         return new HistoryActionCollection($queryBuilder->getQuery()->getResult());
     }
 }
