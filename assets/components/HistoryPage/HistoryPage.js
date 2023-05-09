@@ -39,7 +39,7 @@ const HistoryPage = () => {
         }
       },
       loadMore: () => {
-        if (!fetching) {
+        if (!fetching && startFrom) {
           setFetching(true);
           Helper.fetchHistory({'task': params.task, 'search': search, 'startFrom': startFrom})
             .then(response => {
