@@ -46,9 +46,6 @@ const ActionList = ({actions, events, task}) => {
   let previousAction = null;
   let repeatedActionAmount = 0;
   actions.forEach(action => {
-    if (action.isHidden) {
-      return;
-    }
     const spacer = resolveSpacer(action, previousAction);
     if (spacer) {
       list.push(spacer);

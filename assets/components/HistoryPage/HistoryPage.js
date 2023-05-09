@@ -1,6 +1,5 @@
 import React, {useLayoutEffect, useState} from 'react';
 import Helper from "../App/Helper";
-import Config from "../App/Config";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
 import Icon from "../App/Icon";
@@ -17,32 +16,39 @@ const HistoryPage = () => {
 
   const getTaskInitialState = (params) => params.task ? {'id': parseInt(params.task)} : undefined;
   const [task, setTask] = useState(getTaskInitialState(params))
-  const [startFrom, setStartFrom] = useState(null)
-  const [search, setSearch] = useState("");
+  const [startFrom, setStartFrom] = useState(undefined)
+  const [search, setSearch] = useState(undefined);
   const [actions, setActions] = useState([]);
   const [reminderNumber, setReminderNumber] = useState(LocalStorage.getReminderNumber());
+  const [fetching, setFetching] = useState(false);
 
   const events = new function () {
     return {
       init: () => {
-        Helper.fetchJson(Config.apiUrlPrefix + "/history", {'task': params.task})
-          .then(response => {
-            setTask(response.task);
-            setActions(response.actions);
-            setReminderNumber(response.reminderNumber);
-            setStartFrom(response.startFrom);
-            LocalStorage.setReminderNumber(reminderNumber);
-          });
+        if (!fetching) {
+          setFetching(true);
+          Helper.fetchHistory({'task': params.task, 'search': search})
+            .then(response => {
+              setTask(response.task);
+              setActions(response.actions);
+              setReminderNumber(response.reminderNumber);
+              setStartFrom(response.startFrom);
+              LocalStorage.setReminderNumber(reminderNumber);
+            });
+        }
       },
       loadMore: () => {
-        Helper.fetchJson(Config.apiUrlPrefix + "/history", {'startFrom': startFrom, 'task': params.task})
-          .then(response => {
-            setActions([...actions, ...response.actions]);
-            setStartFrom(response.startFrom);
-          });
+        if (!fetching) {
+          setFetching(true);
+          Helper.fetchHistory({'task': params.task, 'search': search, 'startFrom': startFrom})
+            .then(response => {
+              setActions([...actions, ...response.actions]);
+              setStartFrom(response.startFrom);
+            });
+        }
       },
       reload: () => {
-        setActions(undefined);
+        setActions([]);
         events.init();
       },
       revealAction: (id) => {
@@ -52,20 +58,11 @@ const HistoryPage = () => {
           }
           return action;
         }));
-      },
-      onSearchUpdate: () => {
-        if (actions) {
-          setActions((actions) => actions.map(action => {
-            action.isHidden = !action.message.toLowerCase().includes(search.toLowerCase());
-            return action;
-          }));
-        }
       }
     }
   }
 
-  useLayoutEffect(events.init, [params.task]);
-  useLayoutEffect(events.onSearchUpdate, [search]);
+  useLayoutEffect(events.init, [params.task, search]);
 
   return (
     <Page sidebar={{root: null, onSearch: setSearch, reminderNumber: reminderNumber}}>

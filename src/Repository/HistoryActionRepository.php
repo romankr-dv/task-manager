@@ -22,22 +22,30 @@ class HistoryActionRepository extends ServiceEntityRepository
         parent::__construct($registry, HistoryAction::class);
     }
 
-    public function findByUser(User $user, int $startFrom, int $limit): HistoryActionCollection
+    public function findByUser(User $user, ?string $search, int $startFrom, int $limit): HistoryActionCollection
     {
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->andWhere('a.user = :user');
         $queryBuilder->setParameter('user', $user);
+        if (!empty($search)) {
+            $queryBuilder->andWhere('a.message LIKE :search');
+            $queryBuilder->setParameter('search', "%$search%");
+        }
         $queryBuilder->orderBy('a.id', 'DESC');
         $queryBuilder->setFirstResult($startFrom);
         $queryBuilder->setMaxResults($limit);
         return new HistoryActionCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findByTask(Task $task, int $startFrom, int $limit): HistoryActionCollection
+    public function findByTask(Task $task, ?string $search, int $startFrom, int $limit): HistoryActionCollection
     {
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->andWhere('a.task = :task');
         $queryBuilder->setParameter('task', $task);
+        if (!empty($search)) {
+            $queryBuilder->andWhere('a.message LIKE :search');
+            $queryBuilder->setParameter('search', "%$search%");
+        }
         $queryBuilder->orderBy('a.id', 'DESC');
         $queryBuilder->setFirstResult($startFrom);
         $queryBuilder->setMaxResults($limit);

@@ -30,9 +30,10 @@ class HistoryController extends AbstractController
         $user = $this->getUser();
         $limit = self::LIMIT_PER_REQUEST;
         $startFrom = (int) max($request->query->get('startFrom'), 0);
-        $taskId = $request->query->get('task');
+        $search = (string) $request->query->get('search');
+        $taskId = (int) $request->query->get('task');
         if (empty($taskId)) {
-            $actions = $this->historyActionRepository->findByUser($user, $startFrom, $limit);
+            $actions = $this->historyActionRepository->findByUser($user, $search, $startFrom, $limit);
             return $this->historyResponseComposer->composeResponse($user, $actions, null, $startFrom);
         }
         $task = $this->taskRepository->find($taskId);
@@ -42,7 +43,7 @@ class HistoryController extends AbstractController
         if (!$task->getUser()->equals($user)) {
             return $this->jsonResponseBuilder->buildPermissionDenied();
         }
-        $actions = $this->historyActionRepository->findByTask($task, $startFrom, $limit);
+        $actions = $this->historyActionRepository->findByTask($task, $search, $startFrom, $limit);
         return $this->historyResponseComposer->composeResponse($user, $actions, $task, $startFrom);
     }
 }
