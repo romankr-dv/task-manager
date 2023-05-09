@@ -5,6 +5,7 @@ namespace App\Composer;
 use App\Builder\HistoryActionResponseBuilder;
 use App\Builder\JsonResponseBuilder;
 use App\Collection\HistoryActionCollection;
+use App\Config\HistoryActionConfig;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
@@ -44,10 +45,11 @@ class HistoryResponseComposer
 
     private function getNextStartFrom(HistoryActionCollection $actions, int $startFrom): ?int
     {
-        if ($actions->isEmpty()) {
+        $limit = HistoryActionConfig::LIMIT_PER_REQUEST;
+        if ($actions->count() < $limit) {
             return null;
         }
-        return $startFrom + $actions->count();
+        return $startFrom + $limit;
     }
 
     private function composeTaskResponse(Task $task): array

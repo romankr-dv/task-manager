@@ -4,6 +4,7 @@ namespace App\Config;
 
 class HistoryActionConfig
 {
+    public const LIMIT_PER_REQUEST = 25;
     public const CREATE_TASK_ACTION = 'createTask';
     public const EDIT_TASK_TITLE_ACTION = 'editTaskTitle';
     public const EDIT_TASK_LINK_ACTION = 'editTaskLink';

@@ -6,7 +6,10 @@ import Config from "../../Config";
 const Search = ({onSearch}) => {
   const [value, setValue] = useState("");
   const onChange = (e) => {
-    const value = e.target.value;
+    let value = e.target.value;
+    if (!value) {
+      value = undefined
+    }
     setValue(value);
     Helper.addTimeout("search", () => onSearch(value), Config.updateSearchTimeout)
   }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Builder\JsonResponseBuilder;
 use App\Composer\HistoryResponseComposer;
+use App\Config\HistoryActionConfig;
 use App\Repository\HistoryActionRepository;
 use App\Repository\TaskRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,8 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 #[Route('/internal-api/history')]
 class HistoryController extends AbstractController
 {
-    private const LIMIT_PER_REQUEST = 25;
-
     public function __construct(
         private HistoryResponseComposer $historyResponseComposer,
         private HistoryActionRepository $historyActionRepository,
@@ -28,7 +27,7 @@ class HistoryController extends AbstractController
     public function init(Request $request): JsonResponse
     {
         $user = $this->getUser();
-        $limit = self::LIMIT_PER_REQUEST;
+        $limit = HistoryActionConfig::LIMIT_PER_REQUEST;
         $startFrom = (int) max($request->query->get('startFrom'), 0);
         $search = (string) $request->query->get('search');
         $taskId = (int) $request->query->get('task');
