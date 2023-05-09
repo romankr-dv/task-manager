@@ -15,9 +15,9 @@ const TaskPanelHeading = ({title, icon, root, events}) => {
   return (
     <PanelHeading title={title} icon={icon}>
       {renderPanelHeadingTask(root)}
-      <Button onClick={() => events.toggleCalendar()}><OpenIcon name="credit-card"/></Button>
-      <Button onClick={() => events.reload()}><OpenIcon name="reload"/></Button>
-      <Button onClick={() => events.createNewTask(root?.id)}><OpenIcon name="plus"/></Button>
+      <Button onClick={() => events.toggleCalendar()} tooltip="Show calendar"><OpenIcon name="credit-card"/></Button>
+      <Button onClick={() => events.reload()} tooltip="Refresh"><OpenIcon name="reload"/></Button>
+      <Button onClick={() => events.createNewTask(root?.id)} tooltip="Add task"><OpenIcon name="plus"/></Button>
     </PanelHeading>
   );
 }

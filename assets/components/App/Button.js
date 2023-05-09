@@ -23,6 +23,8 @@ const Button = ({onClick, className, buttonStyle, buttonSize, onFocus, tooltip, 
             className={prepareClassName()}
             onFocus={wrappedOnFocus}
             data-tooltip-id="basic-tooltip"
+            data-tooltip-variant="info"
+            data-tooltip-delay-show={400}
             data-tooltip-content={tooltip}>
       {children}
     </button>
