@@ -47,26 +47,33 @@ const Helper = new function () {
       }
       return url;
     },
-    getNewTaskUrl() {
-      return Config.apiUrlPrefix + '/tasks/new';
+    fetchNewTask(parent) {
+      const url = Config.apiUrlPrefix + '/tasks/new';
+      return Helper.fetchJsonPost(url, {'parent': parent});
     },
-    getTaskStartUrl(taskId) {
-      return Config.apiUrlPrefix + '/tasks/' + taskId + '/start';
+    fetchTaskStart(taskId) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/start';
+      return Helper.fetchJsonPost(url);
     },
-    getTaskFinishUrl(taskId) {
-      return Config.apiUrlPrefix + '/tasks/' + taskId + '/finish';
+    fetchTaskFinish(taskId) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/finish';
+      return Helper.fetchJsonPost(url);
     },
-    getTaskEditUrl(taskId) {
-      return Config.apiUrlPrefix + '/tasks/' + taskId + '/edit';
+    fetchTaskEdit(taskId, params) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit';
+      return Helper.fetchJsonPost(url, params)
     },
-    getTaskEditSettingsUrl(taskId) {
-      return Config.apiUrlPrefix + '/tasks/' + taskId + '/edit/settings';
+    fetchTaskEditSettings(taskId, params) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit/settings';
+      return Helper.fetchJsonPost(url, params);
     },
-    getTaskDeleteUrl(taskId) {
-      return Config.apiUrlPrefix + '/tasks/' + taskId + '/delete';
+    fetchTaskDelete(taskId) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/delete';
+      return Helper.fetchJsonPost(url);
     },
     fetchHistory(params) {
-      return this.fetch(Config.apiUrlPrefix + "/history", params)
+      const url = Config.apiUrlPrefix + "/history";
+      return Helper.fetchJson(url, params);
     },
     isGithubLink(link) {
       return link.includes(Config.githubUrlPrefix)

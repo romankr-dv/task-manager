@@ -84,8 +84,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         })
       },
       createNewTask: (parent = null) => {
-        const url = Helper.getNewTaskUrl();
-        Helper.fetchJsonPost(url, {'parent': parent})
+        Helper.fetchNewTask(parent)
           .then(task => {
             task.autoFocus = true;
             setTasks(tasks => [task, ...tasks])
@@ -95,13 +94,11 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
           });
       },
       startTask: (id) => {
-        const url = Helper.getTaskStartUrl(id);
-        Helper.fetchJsonPost(url)
+        Helper.fetchTaskStart(id)
           .then(response => setActiveTask({task: id, trackedTime: 0, path: response.activeTask.path}));
       },
       finishTask: (id) => {
-        const url = Helper.getTaskFinishUrl(id);
-        Helper.fetchJsonPost(url)
+        Helper.fetchTaskFinish(id)
           .then(() => setActiveTask(undefined));
       },
       removeTask: (id) => {
@@ -109,8 +106,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         if (!confirm("Are you sure, you want to remove '" + task.title + "'?")) {
           return;
         }
-        const url = Helper.getTaskDeleteUrl(id);
-        fetch(url, {method: 'POST'})
+        Helper.fetchTaskDelete(id)
           .then(() => {
             // todo: remove task children
             setTasks(tasks => tasks.filter(i => i.id !== id))
@@ -120,8 +116,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         setTitleChanging(true);
         events.updateTask(id, {title: title});
         Helper.addTimeout('task_title' + id, () => {
-          const url = Helper.getTaskEditUrl(id);
-          Helper.fetchJsonPost(url, {'title': title})
+          Helper.fetchTaskEdit(id, {'title': title})
             .then(() => setTitleChanging(false));
         }, Config.updateInputTimeout);
       },
@@ -129,8 +124,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         setLinkChanging(true);
         events.updateTask(id, {link: link});
         Helper.addTimeout('task_link' + id, () => {
-          const url = Helper.getTaskEditUrl(id);
-          Helper.fetchJsonPost(url, {'link': link})
+          Helper.fetchTaskEdit(id, {'link': link})
             .then(() => setLinkChanging(false));
         }, Config.updateInputTimeout);
       },
@@ -143,30 +137,25 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         if (!taskWasReminder && taskWillBeReminder) setReminderNumber(reminderNumber + 1);
 
         events.updateTask(task.id, {reminder: reminder});
-        const url = Helper.getTaskEditUrl(task.id);
-        Helper.fetchJsonPost(url, {'reminder': reminder}).then();
+        Helper.fetchTaskEdit(task.id, {'reminder': reminder}).then();
       },
       updateTaskStatus: (id, status) => {
         events.updateTask(id, {status: status});
-        const url = Helper.getTaskEditUrl(id);
-        Helper.fetchJsonPost(url, {'status': status}).then();
+        Helper.fetchTaskEdit(id, {'status': status}).then();
       },
       updateTaskChildrenViewSetting: (id, value) => {
         events.updateTask(id, {isChildrenOpen: value})
-        const url = Helper.getTaskEditSettingsUrl(id);
-        Helper.fetchJsonPost(url, {'isChildrenOpen': value}).then();
+        Helper.fetchTaskEditSettings(id, {'isChildrenOpen': value}).then();
       },
       updateTaskAdditionalPanelViewSetting: (id, value) => {
         events.updateTask(id, {isAdditionalPanelOpen: value})
-        const url = Helper.getTaskEditSettingsUrl(id);
-        Helper.fetchJsonPost(url, {'isAdditionalPanelOpen': value}).then();
+        Helper.fetchTaskEditSettings(id, {'isAdditionalPanelOpen': value}).then();
       },
       updateTaskDescription: (id, description, setDescriptionChanging) => {
         setDescriptionChanging(true);
         events.updateTask(id, {description: description})
         Helper.addTimeout('task_description' + id, () => {
-          const url = Helper.getTaskEditUrl(id);
-          Helper.fetchJsonPost(url, {'description': description})
+          Helper.fetchTaskEdit(id, {'description': description})
             .then(() => setDescriptionChanging(false));
         }, Config.updateInputTimeout);
       },
