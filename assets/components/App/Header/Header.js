@@ -15,7 +15,7 @@ const Header = () => {
             <span className="icon-bar"/>
             <span className="icon-bar"/>
           </button>
-          <a href="#" className="navbar-brand">
+          <a href="/" className="navbar-brand">
             <i className="fa fa-check-square-o" style={{color: '#48CFAD', marginRight: '5px'}}/>
             <div style={{display: 'inline-block'}}>Task Manager</div>
           </a>

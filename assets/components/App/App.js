@@ -11,6 +11,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<AllTasks/>}/>
         <Route path="/:root?/tasks/reminders" element={<Reminders/>}/>
         <Route path="/:root?/tasks/todo" element={<Todo/>}/>
         <Route path="/:root?/tasks/status/progress" element={<InProgress/>}/>
