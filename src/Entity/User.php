@@ -40,24 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private string $password;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user", orphanRemoval=true)
-     * @var Collection|Task[]
-     */
-    private Collection $tasks;
-
-    /**
-     * @ORM\OneToMany(targetEntity=TrackedPeriod::class, mappedBy="user", orphanRemoval=true)
-     * @var Collection|TrackedPeriod[]
-     */
-    private Collection $trackedPeriods;
-
-    public function __construct()
-    {
-        $this->tasks = new ArrayCollection();
-        $this->trackedPeriods = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -133,39 +115,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection|Task[]
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
-
-    public function addTask(Task $task): void
-    {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks[] = $task;
-            $task->setUser($this);
-        }
-    }
-
-    public function removeTask(Task $task): void
-    {
-        if ($this->tasks->removeElement($task) && $task->getUser() === $this) {
-            $task->setUser(null);
-        }
-    }
-
     public function equals(User $user): bool
     {
         return $this->getId() === $user->getId();
-    }
-
-    /**
-     * @return Collection|TrackedPeriod[]
-     */
-    public function getTrackedPeriods(): Collection
-    {
-        return $this->trackedPeriods;
     }
 }

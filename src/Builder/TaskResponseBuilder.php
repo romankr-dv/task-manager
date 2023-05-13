@@ -6,7 +6,6 @@ use App\Collection\TaskCollection;
 use App\Collection\TaskStatusCollection;
 use App\Entity\Task;
 use App\Entity\TaskStatus;
-use App\Entity\TrackedPeriod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TaskResponseBuilder
@@ -55,9 +54,7 @@ class TaskResponseBuilder
             'link' => $task->getLink(),
             'reminder' => $reminder?->getTimestamp(),
             'createdAt' => $createdAt?->getTimestamp(),
-            'status' => $task->getStatus(),
-            'trackedTime' => $task->getTrackedTime(),
-            'childrenTrackedTime' => $task->getChildrenTrackedTime()
+            'status' => $task->getStatus()
         ];
     }
 
@@ -78,15 +75,6 @@ class TaskResponseBuilder
             'id' => $status->getId(),
             'title' => $status->getTitle(),
             'color' => $status->getColor()
-        ];
-    }
-
-    public function buildActiveTaskResponse(TrackedPeriod $activePeriod, TaskCollection $path): array
-    {
-        return [
-            'task' => $activePeriod->getTask()->getId(),
-            'trackedTime' => time() - $activePeriod->getStartedAt()->getTimestamp(),
-            'path' => $path->getIds()
         ];
     }
 }

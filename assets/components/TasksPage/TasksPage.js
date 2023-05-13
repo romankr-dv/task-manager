@@ -55,7 +55,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
   const [showCalendar, setShowCalendar] = useState(LocalStorage.getShowCalendar());
   const [statuses, setStatuses] = useState(undefined);
   const [search, setSearch] = useState(undefined);
-  const [activeTask, setActiveTask] = useState(undefined);
   const [reminderNumber, setReminderNumber] = useState(LocalStorage.getReminderNumber());
 
   const events = new function () {
@@ -69,7 +68,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
               return task;
             });
             setStatuses(response.statuses);
-            setActiveTask(response.activeTask);
             setTasks(tasks);
             setRoot(composeRootTask(newRoot, root, tasks));
             setReminderNumber(response.reminderNumber);
@@ -98,14 +96,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
               events.updateTask(parent, {isChildrenOpen: true})
             }
           });
-      },
-      startTask: (id) => {
-        Helper.fetchTaskStart(id)
-          .then(response => setActiveTask({task: id, trackedTime: 0, path: response.activeTask.path}));
-      },
-      finishTask: (id) => {
-        Helper.fetchTaskFinish(id)
-          .then(() => setActiveTask(undefined));
       },
       removeTask: (id) => {
         const task = tasks.find(task => task.id === id);
@@ -205,7 +195,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         <TaskListWrapper data={{
           root: root,
           tasks: tasks,
-          activeTask: activeTask,
           statuses: statuses,
           nested: nested
         }} events={events}/>

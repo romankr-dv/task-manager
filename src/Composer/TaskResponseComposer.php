@@ -9,7 +9,6 @@ use App\Config\TaskStatusConfig;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
-use App\Repository\TrackedPeriodRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TaskResponseComposer
@@ -17,7 +16,6 @@ class TaskResponseComposer
     public function __construct(
         private TaskResponseBuilder $taskResponseBuilder,
         private TaskRepository $taskRepository,
-        private TrackedPeriodRepository $trackedPeriodRepository,
         private TaskStatusConfig $taskStatusConfig,
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
@@ -25,18 +23,11 @@ class TaskResponseComposer
     public function composeListResponse(User $user, TaskCollection $tasks): JsonResponse
     {
         $root = $this->findRootTask($user, $tasks);
-        $activePeriod = $this->trackedPeriodRepository->findActivePeriod($user);
         $reminderNumber = $this->taskRepository->countUserReminders($user);
         $statusCollection = $this->taskStatusConfig->getStatusCollection();
-        $activeTask = null;
-        if ($activePeriod) {
-            $path = $this->taskRepository->getTaskPath($activePeriod->getTask());
-            $activeTask = $this->taskResponseBuilder->buildActiveTaskResponse($activePeriod, $path);
-        }
         return $this->jsonResponseBuilder->build([
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
             'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $root),
-            'activeTask' => $activeTask,
             'reminderNumber' => $reminderNumber
         ]);
     }

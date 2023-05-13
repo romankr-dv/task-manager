@@ -124,16 +124,4 @@ class TaskRepository extends NestedTreeRepository
         $nodes = $this->getPath($task);
         return new TaskCollection($nodes);
     }
-
-    public function increaseTrackedTime(Task $task, int $increase): void
-    {
-        $task->increaseTrackedTime($increase);
-        $path = $this->getTaskPath($task);
-        foreach ($path as $item) {
-            if ($item->equals($task)) {
-                continue;
-            }
-            $item->increaseChildrenTrackedTime($increase);
-        }
-    }
 }

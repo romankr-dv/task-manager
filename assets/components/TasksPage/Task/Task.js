@@ -7,8 +7,7 @@ import moment from "moment";
 import './Task.scss';
 
 const Task = ({task, data, events}) => {
-  const {tasks, activeTask, statuses, nested} = data;
-  const isActive = activeTask && activeTask.task === task.id;
+  const {tasks, statuses, nested} = data;
   const children = tasks.filter(e => e.parent === task.id);
   const showChildren = nested && task.isChildrenOpen && children.length > 0;
 
@@ -17,10 +16,10 @@ const Task = ({task, data, events}) => {
 
   return (
     <div className="task">
-      <TaskStatusBadge isReminder={isReminder} isActive={isActive} status={status}/>
-      <TaskHeader task={task} activeTask={activeTask} children={children} events={events}/>
+      <TaskStatusBadge isReminder={isReminder} status={status}/>
+      <TaskHeader task={task} children={children} events={events}/>
       {task.isAdditionalPanelOpen ?
-        <TaskAdditionalPanel task={task} isActive={isActive} statuses={statuses} events={events}/> : null}
+        <TaskAdditionalPanel task={task} statuses={statuses} events={events}/> : null}
       {showChildren ? <TaskList children={children} data={data} events={events}/> : null}
     </div>
   )

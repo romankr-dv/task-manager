@@ -11,7 +11,6 @@ use App\Config\TaskStatusConfig;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
-use App\Repository\TrackedPeriodRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -21,7 +20,6 @@ class TaskService
     public function __construct(
         private TaskStatusConfig $taskStatusConfig,
         private TaskRepository $taskRepository,
-        private TrackedPeriodRepository $trackedPeriodRepository,
         private EntityManagerInterface $entityManager,
         private TaskBuilder $taskBuilder,
         private HistoryActionBuilder $historyActionBuilder,
@@ -31,20 +29,7 @@ class TaskService
     public function getTasksByStatus(User $user, string $statusSlug): TaskCollection
     {
         $status = $this->taskStatusConfig->getStatusBySlug($statusSlug);
-        $isProgressStatus = $status->getId() === TaskStatusConfig::IN_PROGRESS_STATUS_ID;
-        $fullHierarchy = !$isProgressStatus;
-
-        $tasks = $this->taskRepository->findUserTasksByStatus($user, $status, $fullHierarchy);
-        if ($isProgressStatus) {
-            $activePeriod = $this->trackedPeriodRepository->findActivePeriod($user);
-            if ($activePeriod) {
-                $activeTask = $activePeriod->getTask();
-                if (!$tasks->has($activeTask)) {
-                    $tasks->add($activeTask);
-                }
-            }
-        }
-        return $tasks;
+        return $this->taskRepository->findUserTasksByStatus($user, $status);
     }
 
     public function createTask(User $user, Task $parent): Task
