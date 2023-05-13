@@ -102,12 +102,6 @@ class Task
     private $children;
 
     /**
-     * @ORM\OneToMany(targetEntity=UserTaskSettings::class, mappedBy="task", orphanRemoval=true)
-     * @var Collection|UserTaskSettings[]
-     */
-    private Collection $usersSettings;
-
-    /**
      * @ORM\OneToMany(targetEntity=TrackedPeriod::class, mappedBy="task", orphanRemoval=true)
      * @var Collection|TrackedPeriod[]
      */
@@ -130,7 +124,6 @@ class Task
 
     public function __construct()
     {
-        $this->usersSettings = new ArrayCollection();
         $this->trackedPeriods = new ArrayCollection();
     }
 
@@ -280,14 +273,6 @@ class Task
     public function equals(Task $task): bool
     {
         return $this->id === $task->getId();
-    }
-
-    /**
-     * @return Collection|UserTaskSettings[]
-     */
-    public function getUsersSettings(): Collection
-    {
-        return $this->usersSettings;
     }
 
     /**

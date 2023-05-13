@@ -145,11 +145,9 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
       },
       updateTaskChildrenViewSetting: (id, value) => {
         events.updateTask(id, {isChildrenOpen: value})
-        Helper.fetchTaskEditSettings(id, {'isChildrenOpen': value}).then();
       },
       updateTaskAdditionalPanelViewSetting: (id, value) => {
         events.updateTask(id, {isAdditionalPanelOpen: value})
-        Helper.fetchTaskEditSettings(id, {'isAdditionalPanelOpen': value}).then();
       },
       updateTaskDescription: (id, description, setDescriptionChanging) => {
         setDescriptionChanging(true);

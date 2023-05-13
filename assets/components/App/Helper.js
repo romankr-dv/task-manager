@@ -63,10 +63,6 @@ const Helper = new function () {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit';
       return Helper.fetchJsonPost(url, params)
     },
-    fetchTaskEditSettings(taskId, params) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit/settings';
-      return Helper.fetchJsonPost(url, params);
-    },
     fetchTaskDelete(taskId) {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/delete';
       return Helper.fetchJsonPost(url);

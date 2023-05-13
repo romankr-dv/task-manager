@@ -10,16 +10,13 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Repository\TrackedPeriodRepository;
-use App\Repository\UserTaskSettingsRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\UserTaskSettings;
 
 class TaskResponseComposer
 {
     public function __construct(
         private TaskResponseBuilder $taskResponseBuilder,
         private TaskRepository $taskRepository,
-        private UserTaskSettingsRepository $settingsRepository,
         private TrackedPeriodRepository $trackedPeriodRepository,
         private TaskStatusConfig $taskStatusConfig,
         private JsonResponseBuilder $jsonResponseBuilder
@@ -28,7 +25,6 @@ class TaskResponseComposer
     public function composeListResponse(User $user, TaskCollection $tasks): JsonResponse
     {
         $root = $this->findRootTask($user, $tasks);
-        $settings = $this->settingsRepository->findByTasks($tasks);
         $activePeriod = $this->trackedPeriodRepository->findActivePeriod($user);
         $reminderNumber = $this->taskRepository->countUserReminders($user);
         $statusCollection = $this->taskStatusConfig->getStatusCollection();
@@ -39,16 +35,16 @@ class TaskResponseComposer
         }
         return $this->jsonResponseBuilder->build([
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
-            'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $settings, $root),
+            'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $root),
             'activeTask' => $activeTask,
             'reminderNumber' => $reminderNumber
         ]);
     }
 
-    public function composeTaskResponse(User $user, Task $task, UserTaskSettings $settings): JsonResponse
+    public function composeTaskResponse(User $user, Task $task): JsonResponse
     {
         $root = $this->taskRepository->findUserRootTask($user);
-        return $this->taskResponseBuilder->buildTaskJsonResponse($task, $settings, $root);
+        return $this->taskResponseBuilder->buildTaskJsonResponse($task, $root);
     }
 
     private function findRootTask(User $user, TaskCollection $tasks): Task

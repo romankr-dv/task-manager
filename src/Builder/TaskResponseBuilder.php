@@ -4,17 +4,14 @@ namespace App\Builder;
 
 use App\Collection\TaskCollection;
 use App\Collection\TaskStatusCollection;
-use App\Collection\UserTaskSettingsCollection;
 use App\Entity\Task;
 use App\Entity\TaskStatus;
 use App\Entity\TrackedPeriod;
-use App\Entity\UserTaskSettings;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TaskResponseBuilder
 {
     public function __construct(
-        private UserTaskSettingsBuilder $settingsBuilder,
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
@@ -29,7 +26,6 @@ class TaskResponseBuilder
 
     public function buildTaskListResponse(
         TaskCollection $tasks,
-        UserTaskSettingsCollection $settings,
         Task $root
     ): array {
         $taskListResponse = [];
@@ -37,18 +33,17 @@ class TaskResponseBuilder
             if ($task->getParent() === null) {
                 continue;
             }
-            $setting = $settings->findOneByTask($task) ?? $this->settingsBuilder->buildDefaultSettings($task);
-            $taskListResponse[] = $this->buildTaskResponse($task, $setting, $root);
+            $taskListResponse[] = $this->buildTaskResponse($task, $root);
         }
         return $taskListResponse;
     }
 
-    public function buildTaskJsonResponse(Task $task, UserTaskSettings $userSettings, Task $root): JsonResponse
+    public function buildTaskJsonResponse(Task $task, Task $root): JsonResponse
     {
-        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task, $userSettings, $root));
+        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task, $root));
     }
 
-    private function buildTaskResponse(Task $task, UserTaskSettings $userSettings, Task $root): array
+    private function buildTaskResponse(Task $task, Task $root): array
     {
         $reminder = $task->getReminder();
         $createdAt = $task->getCreatedAt();
@@ -62,9 +57,7 @@ class TaskResponseBuilder
             'createdAt' => $createdAt?->getTimestamp(),
             'status' => $task->getStatus(),
             'trackedTime' => $task->getTrackedTime(),
-            'childrenTrackedTime' => $task->getChildrenTrackedTime(),
-            'isAdditionalPanelOpen' => $userSettings->getIsAdditionalPanelOpen(),
-            'isChildrenOpen' => $userSettings->getIsChildrenOpen()
+            'childrenTrackedTime' => $task->getChildrenTrackedTime()
         ];
     }
 

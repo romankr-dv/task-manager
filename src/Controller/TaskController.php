@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Builder\JsonResponseBuilder;
-use App\Builder\UserTaskSettingsBuilder;
 use App\Checker\TaskPermissionChecker;
 use App\Composer\TaskResponseComposer;
 use App\Config\TaskStatusConfig;
@@ -25,7 +24,6 @@ class TaskController extends AbstractController
         private TaskRepository $taskRepository,
         private TaskResponseComposer $taskResponseComposer,
         private TaskStatusConfig $taskStatusConfig,
-        private UserTaskSettingsBuilder $userTaskSettingsBuilder,
         private JsonResponseBuilder $jsonResponseBuilder,
         private TaskService $taskService,
         private TaskPermissionChecker $taskPermissionChecker
@@ -76,8 +74,7 @@ class TaskController extends AbstractController
             return $this->jsonResponseBuilder->buildPermissionDenied();
         }
         $task = $this->taskService->createTask($user, $parent);
-        $settings = $this->userTaskSettingsBuilder->buildDefaultSettings($task);
-        return $this->taskResponseComposer->composeTaskResponse($user, $task, $settings);
+        return $this->taskResponseComposer->composeTaskResponse($user, $task);
     }
 
     private function getParentFromRequest(Request $request): ?Task
@@ -96,16 +93,6 @@ class TaskController extends AbstractController
             return $this->jsonResponseBuilder->buildPermissionDenied();
         }
         $this->taskService->editTask($user, $task, $request->request);
-        return $this->jsonResponseBuilder->build();
-    }
-
-    #[Route('/{id}/edit/settings', name: 'app_api_task_edit_settings', methods: ['POST'])]
-    public function editSettings(Task $task, Request $request): JsonResponse
-    {
-        if (!$this->taskPermissionChecker->canEditTask($this->getUser(), $task)) {
-            return $this->jsonResponseBuilder->buildPermissionDenied();
-        }
-        $this->taskService->editTaskSettings($this->getUser(), $task, $request->request);
         return $this->jsonResponseBuilder->build();
     }
 

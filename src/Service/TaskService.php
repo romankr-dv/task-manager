@@ -12,7 +12,6 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Repository\TrackedPeriodRepository;
-use App\Repository\UserTaskSettingsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -25,7 +24,6 @@ class TaskService
         private TrackedPeriodRepository $trackedPeriodRepository,
         private EntityManagerInterface $entityManager,
         private TaskBuilder $taskBuilder,
-        private UserTaskSettingsRepository $userTaskSettingsRepository,
         private HistoryActionBuilder $historyActionBuilder,
         private HistoryActionMessageComposer $historyActionMessageComposer
     ) {}
@@ -53,10 +51,6 @@ class TaskService
     {
         $task = $this->taskBuilder->buildNewTask($user, $parent);
         $this->entityManager->persist($task);
-
-        $parentSettings = $this->userTaskSettingsRepository->findByUserAndTask($user, $parent);
-        $parentSettings->setIsChildrenOpen(true);
-        $this->entityManager->persist($parentSettings);
 
         $message = $this->historyActionMessageComposer->composeNewTaskMessage();
         $this->createHistoryAction($user, $task, HistoryActionConfig::CREATE_TASK_ACTION, $message);
@@ -92,19 +86,6 @@ class TaskService
             $message = $this->historyActionMessageComposer->composeTaskDescriptionUpdateMessage($task->getDescription());
             $this->createHistoryAction($user, $task, HistoryActionConfig::EDIT_TASK_DESCRIPTION_ACTION, $message);
         }
-        $this->entityManager->flush();
-    }
-
-    public function editTaskSettings(User $user, Task $task, ParameterBag $input): void
-    {
-        $setting = $this->userTaskSettingsRepository->findByUserAndTask($user, $task);
-        if ($input->has('isChildrenOpen')) {
-            $setting->setIsChildrenOpen($input->get('isChildrenOpen'));
-        }
-        if ($input->has('isAdditionalPanelOpen')) {
-            $setting->setIsAdditionalPanelOpen($input->get('isAdditionalPanelOpen'));
-        }
-        $this->entityManager->persist($setting);
         $this->entityManager->flush();
     }
 
