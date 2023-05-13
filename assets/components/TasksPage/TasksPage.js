@@ -37,6 +37,9 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
     if (nested && root && !checkRootTask(task, root, tasks)) {
       return false;
     }
+    if (!search) {
+      return true;
+    }
     if (task.title.toLowerCase().includes(search.toLowerCase())) {
       return true;
     }
@@ -48,17 +51,16 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
 
   const params = useParams();
   const [root, setRoot] = useState(findRootTask(params))
-  const [tasks, setTasks] = useState(undefined);
+  const [tasks, setTasks] = useState([]);
   const [showCalendar, setShowCalendar] = useState(LocalStorage.getShowCalendar());
   const [statuses, setStatuses] = useState(undefined);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(undefined);
   const [activeTask, setActiveTask] = useState(undefined);
   const [reminderNumber, setReminderNumber] = useState(LocalStorage.getReminderNumber());
 
   const events = new function () {
     return {
-      reload: () => {
-        setTasks([]);
+      fetch: () => {
         Helper.fetchJson(fetchFrom)
           .then(response => {
             const newRoot = findRootTask(params)
@@ -72,6 +74,10 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
             setRoot(composeRootTask(newRoot, root, tasks));
             setReminderNumber(response.reminderNumber);
           });
+      },
+      reload: () => {
+        setTasks([]);
+        events.fetch();
       },
       updateTask: (id, update) => {
         setTasks(tasks => {
@@ -185,7 +191,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
     }
   }
 
-  useLayoutEffect(events.reload, [fetchFrom]);
+  useLayoutEffect(events.fetch, [fetchFrom]);
   useLayoutEffect(events.onSearchUpdate, [search]);
   useLayoutEffect(events.onReminderNumberUpdate, [reminderNumber]);
   useLayoutEffect(events.onShowCalendarUpdate, [showCalendar]);

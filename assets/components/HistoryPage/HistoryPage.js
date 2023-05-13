@@ -24,7 +24,7 @@ const HistoryPage = () => {
 
   const events = new function () {
     return {
-      init: () => {
+      fetch: () => {
         if (!fetching) {
           setFetching(true);
           Helper.fetchHistory({'task': params.task, 'search': search})
@@ -51,7 +51,7 @@ const HistoryPage = () => {
       },
       reload: () => {
         setActions([]);
-        events.init();
+        events.fetch();
       },
       revealAction: (id) => {
         setActions((actions) => actions.map(action => {
@@ -64,7 +64,7 @@ const HistoryPage = () => {
     }
   }
 
-  useLayoutEffect(events.init, [params.task, search]);
+  useLayoutEffect(events.fetch, [params.task, search]);
 
   return (
     <Page sidebar={{root: null, onSearch: setSearch, reminderNumber: reminderNumber}}>
