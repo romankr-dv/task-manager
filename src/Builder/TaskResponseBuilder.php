@@ -77,4 +77,16 @@ class TaskResponseBuilder
             'color' => $status->getColor()
         ];
     }
+
+    public function buildParentResponse(Task $parent, Task $root): ?array
+    {
+        if ($parent->equals($root)) {
+            return null;
+        }
+        return [
+            'id' => $parent->getId(),
+            'title' => $parent->getTitle(),
+            'parent' => $this->getParentId($parent, $root)
+        ];
+    }
 }

@@ -10,43 +10,8 @@ import LocalStorage from "../App/LocalStorage";
 import TaskList from "./TaskList/TaskList";
 
 const TasksPage = ({title, icon, fetchFrom}) => {
-
-  const findRootTask = (params) => {
-    if (!params.root || !params.root.match(new RegExp('^[0-9]+$'))) {
-      return null;
-    }
-    return {id: parseInt(params.root)};
-  }
-  const composeRootTask = (root, previousRoot, tasks) => {
-    if (!root) {
-      return null;
-    }
-    return {...root, ...previousRoot, ...tasks?.find(task => task.id === root.id)};
-  }
-  const checkRootTask = (task, root, tasks) => {
-    if (task.parent === null) {
-      return false;
-    }
-    if (task.parent === root.id) {
-      return true;
-    }
-    return checkRootTask(tasks.find(parent => parent.id === task.parent), root, tasks);
-  }
-  const isTaskVisible = (task, search, tasks, root) => {
-    if (!search) {
-      return true;
-    }
-    if (task.title.toLowerCase().includes(search.toLowerCase())) {
-      return true;
-    }
-    if (task.link && Helper.isGithubLink(task.link) && Helper.getGithubIssueNumber(task.link).includes(search)) {
-      return true;
-    }
-    return tasks.find(child => child.parent === task.id && isTaskVisible(child, search, tasks, root)) !== undefined;
-  }
-
   const params = useParams();
-  const [root, setRoot] = useState(findRootTask(params))
+  const [root, setRoot] = useState(undefined)
   const [tasks, setTasks] = useState([]);
   const [showCalendar, setShowCalendar] = useState(LocalStorage.getShowCalendar());
   const [statuses, setStatuses] = useState(undefined);
@@ -58,11 +23,9 @@ const TasksPage = ({title, icon, fetchFrom}) => {
       fetch: () => {
         Helper.fetchJson(fetchFrom, {'parent': params.root})
           .then(response => {
-            const newRoot = findRootTask(params)
-            const tasks = response.tasks;
             setStatuses(response.statuses);
-            setTasks(tasks);
-            setRoot(composeRootTask(newRoot, root, tasks));
+            setTasks(response.tasks);
+            setRoot(response.parent);
             setReminderNumber(response.reminderNumber);
           });
       },

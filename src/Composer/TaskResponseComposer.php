@@ -20,15 +20,16 @@ class TaskResponseComposer
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
-    public function composeListResponse(User $user, TaskCollection $tasks): JsonResponse
+    public function composeListResponse(User $user, TaskCollection $tasks, Task $parent): JsonResponse
     {
-        $root = $this->findRootTask($user, $tasks);
+        $root = $this->taskRepository->findUserRootTask($user);
         $reminderNumber = $this->taskRepository->countUserReminders($user);
         $statusCollection = $this->taskStatusConfig->getStatusCollection();
         return $this->jsonResponseBuilder->build([
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
             'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $root),
-            'reminderNumber' => $reminderNumber
+            'reminderNumber' => $reminderNumber,
+            'parent' => $this->taskResponseBuilder->buildParentResponse($parent, $root)
         ]);
     }
 
@@ -36,15 +37,5 @@ class TaskResponseComposer
     {
         $root = $this->taskRepository->findUserRootTask($user);
         return $this->taskResponseBuilder->buildTaskJsonResponse($task, $root);
-    }
-
-    private function findRootTask(User $user, TaskCollection $tasks): Task
-    {
-        foreach ($tasks as $task) {
-            if ($task->getParent() === null) {
-                return $task;
-            }
-        }
-        return $this->taskRepository->findUserRootTask($user);
     }
 }

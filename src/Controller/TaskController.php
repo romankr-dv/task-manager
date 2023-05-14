@@ -34,7 +34,7 @@ class TaskController extends AbstractController
     {
         $parent = $this->getParentFromRequest($request);
         $tasks = $this->taskRepository->findTasks($parent);
-        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
+        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks, $parent);
     }
 
     #[Route('/reminders', name: 'app_api_task_reminders', methods: ['GET'])]
@@ -42,7 +42,7 @@ class TaskController extends AbstractController
     {
         $parent = $this->getParentFromRequest($request);
         $tasks = $this->taskRepository->findUserReminders($parent);
-        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
+        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks, $parent);
     }
 
     #[Route('/todo', name: 'app_api_task_todo', methods: ['GET'])]
@@ -51,7 +51,7 @@ class TaskController extends AbstractController
         $parent = $this->getParentFromRequest($request);
         $statusCollection = $this->taskStatusConfig->getTodoStatusCollection();
         $tasks = $this->taskRepository->findUserTasksByStatusList($parent, $statusCollection);
-        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
+        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks, $parent);
     }
 
     #[Route('/status/{status}', name: 'app_api_task_status', methods: ['GET'])]
@@ -64,7 +64,7 @@ class TaskController extends AbstractController
         }
         $status = $this->taskStatusConfig->getStatusBySlug($statusSlug);
         $tasks = $this->taskRepository->findUserTasksByStatus($parent, $status);
-        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
+        return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks, $parent);
     }
 
     #[Route('/new', name: 'app_api_task_new', methods: ['POST'])]
