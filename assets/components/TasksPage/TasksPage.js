@@ -125,12 +125,6 @@ const TasksPage = ({title, icon, fetchFrom}) => {
       toggleCalendar: () => {
         setShowCalendar(!showCalendar);
       },
-      onSearchUpdate: () => {
-        setTasks((tasks) => tasks.map(task => {
-          task.autoFocus = false;
-          return task;
-        }));
-      },
       onReminderNumberUpdate: () => {
         LocalStorage.setReminderNumber(reminderNumber);
       },
@@ -141,7 +135,6 @@ const TasksPage = ({title, icon, fetchFrom}) => {
   }
 
   useLayoutEffect(events.fetch, [fetchFrom, params.root, search]);
-  useLayoutEffect(events.onSearchUpdate, [search]);
   useLayoutEffect(events.onReminderNumberUpdate, [reminderNumber]);
   useLayoutEffect(events.onShowCalendarUpdate, [showCalendar]);
 
