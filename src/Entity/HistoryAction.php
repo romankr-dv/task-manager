@@ -6,44 +6,30 @@ use App\Repository\HistoryActionRepository;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=HistoryActionRepository::class)
- */
+#[ORM\Entity(HistoryActionRepository::class)]
 class HistoryAction
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Task::class)
-     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: Task::class)]
+    #[ORM\JoinColumn(name: 'task_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Task $task;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $createdAt;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     */
+    #[ORM\Column(type: 'string', length: 20)]
     private string $type;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $message;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $message;
 
     public function getId(): ?int
     {
