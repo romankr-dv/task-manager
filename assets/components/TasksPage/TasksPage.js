@@ -8,26 +8,45 @@ import PanelBody from "../App/PanelBody/PanelBody";
 import TaskReminderCalendar from "./TaskReminderCalendar/TaskReminderCalendar";
 import LocalStorage from "../App/LocalStorage";
 import TaskList from "./TaskList/TaskList";
+import LazyLoading from "../App/Common/LazyLoading";
 
 const TasksPage = ({title, icon, fetchFrom}) => {
   const params = useParams();
   const [root, setRoot] = useState(undefined)
   const [tasks, setTasks] = useState([]);
+  const [startFrom, setStartFrom] = useState(undefined)
   const [showCalendar, setShowCalendar] = useState(LocalStorage.getShowCalendar());
   const [statuses, setStatuses] = useState(undefined);
   const [search, setSearch] = useState(undefined);
   const [reminderNumber, setReminderNumber] = useState(LocalStorage.getReminderNumber());
+  const [fetching, setFetching] = useState(false);
 
   const events = new function () {
     return {
       fetch: () => {
-        Helper.fetchJson(fetchFrom, {'parent': params.root})
-          .then(response => {
-            setStatuses(response.statuses);
-            setTasks(response.tasks);
-            setRoot(response.parent);
-            setReminderNumber(response.reminderNumber);
-          });
+        if (!fetching) {
+          setFetching(true);
+          Helper.fetchJson(fetchFrom, {'parent': params.root})
+            .then(response => {
+              setStatuses(response.statuses);
+              setTasks(response.tasks);
+              setRoot(response.parent);
+              setReminderNumber(response.reminderNumber);
+              setStartFrom(response.startFrom);
+              setFetching(false);
+            });
+        }
+      },
+      loadMore: () => {
+        if (!fetching) {
+          setFetching(true);
+          Helper.fetchJson(fetchFrom, {'parent': params.root, 'startFrom': startFrom})
+            .then(response => {
+              setTasks([...tasks, ...response.tasks]);
+              setStartFrom(response.startFrom);
+              setFetching(false);
+            });
+        }
       },
       reload: () => {
         setTasks([]);
@@ -131,11 +150,13 @@ const TasksPage = ({title, icon, fetchFrom}) => {
       <TaskPanelHeading title={title} icon={icon} root={root} events={events}/>
       {showCalendar ? <TaskReminderCalendar tasks={tasks} statuses={statuses} events={events}/> : null}
       <PanelBody>
-        <TaskList data={{
-          root: root,
-          tasks: tasks,
-          statuses: statuses
-        }} events={events}/>
+        <LazyLoading loadMore={events.loadMore} hasMore={startFrom != null}>
+          <TaskList data={{
+            root: root,
+            tasks: tasks,
+            statuses: statuses
+          }} events={events}/>
+        </LazyLoading>
       </PanelBody>
     </Page>
   );

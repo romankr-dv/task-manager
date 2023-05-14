@@ -4,6 +4,7 @@ namespace App\Config;
 
 class TaskConfig
 {
+    public const LIMIT_PER_REQUEST = 20;
     private const NEW_TASK_TITLE = 'New task!';
     private const NEW_TASK_DEFAULT_STATUS = TaskStatusConfig::PENDING_STATUS_ID;
     private const ROOT_TASK_DEFAULT_STATUS = TaskStatusConfig::NONE_STATUS_ID;
