@@ -2,12 +2,12 @@ import React, {useLayoutEffect, useState} from 'react';
 import Helper from "../App/Helper";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
-import Icon from "../App/Icon";
+import Icon from "../App/Common/Icon";
 import LocalStorage from "../App/LocalStorage";
 import ActionList from "./ActionList/ActionList";
 import {useParams} from "react-router-dom";
 import HistoryPanelHeading from "./HistoryPanelHeading/HistoryPanelHeading";
-import LazyLoading from "../App/LazyLoading";
+import LazyLoading from "../App/Common/LazyLoading";
 
 const HistoryPage = () => {
   const title = "History";
@@ -24,7 +24,7 @@ const HistoryPage = () => {
 
   const events = new function () {
     return {
-      init: () => {
+      fetch: () => {
         if (!fetching) {
           setFetching(true);
           Helper.fetchHistory({'task': params.task, 'search': search})
@@ -51,7 +51,7 @@ const HistoryPage = () => {
       },
       reload: () => {
         setActions([]);
-        events.init();
+        events.fetch();
       },
       revealAction: (id) => {
         setActions((actions) => actions.map(action => {
@@ -64,7 +64,7 @@ const HistoryPage = () => {
     }
   }
 
-  useLayoutEffect(events.init, [params.task, search]);
+  useLayoutEffect(events.fetch, [params.task, search]);
 
   return (
     <Page sidebar={{root: null, onSearch: setSearch, reminderNumber: reminderNumber}}>

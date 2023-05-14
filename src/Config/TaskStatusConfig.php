@@ -65,16 +65,6 @@ class TaskStatusConfig
         ]
     ];
 
-    private const TASKS_LIST_STATUS_ORDER = [
-        self::NONE_STATUS_ID,
-        self::IN_PROGRESS_STATUS_ID,
-        self::PENDING_STATUS_ID,
-        self::FROZEN_STATUS_ID,
-        self::POTENTIAL_STATUS_ID,
-        self::CANCELLED_STATUS_ID,
-        self::COMPLETED_STATUS_ID
-    ];
-
     public function getStatusCollection(): TaskStatusCollection
     {
         return $this->createTaskStatusCollection(array_keys(self::STATUSES));
@@ -96,11 +86,6 @@ class TaskStatusConfig
             }
         }
         return self::NONE_STATUS_ID;
-    }
-
-    public function getTasksListStatusOrder(): array
-    {
-        return self::TASKS_LIST_STATUS_ORDER;
     }
 
     public function getStatusBySlug(string $statusSlug): TaskStatus

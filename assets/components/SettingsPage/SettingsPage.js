@@ -4,7 +4,7 @@ import Helper from "../App/Helper";
 import Config from "../App/Config";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
-import Icon from "../App/Icon";
+import Icon from "../App/Common/Icon";
 import LocalStorage from "../App/LocalStorage";
 
 const SettingsPage = () => {

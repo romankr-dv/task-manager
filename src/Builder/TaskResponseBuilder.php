@@ -4,17 +4,13 @@ namespace App\Builder;
 
 use App\Collection\TaskCollection;
 use App\Collection\TaskStatusCollection;
-use App\Collection\UserTaskSettingsCollection;
 use App\Entity\Task;
 use App\Entity\TaskStatus;
-use App\Entity\TrackedPeriod;
-use App\Entity\UserTaskSettings;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TaskResponseBuilder
 {
     public function __construct(
-        private UserTaskSettingsBuilder $settingsBuilder,
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
@@ -27,28 +23,24 @@ class TaskResponseBuilder
         return $statusListResponse;
     }
 
-    public function buildTaskListResponse(
-        TaskCollection $tasks,
-        UserTaskSettingsCollection $settings,
-        Task $root
-    ): array {
+    public function buildTaskListResponse(TaskCollection $tasks): array
+    {
         $taskListResponse = [];
         foreach ($tasks as $task) {
-            if ($task->getParent() === null) {
+            if ($task->isNamespace()) {
                 continue;
             }
-            $setting = $settings->findOneByTask($task) ?? $this->settingsBuilder->buildDefaultSettings($task);
-            $taskListResponse[] = $this->buildTaskResponse($task, $setting, $root);
+            $taskListResponse[] = $this->buildTaskResponse($task);
         }
         return $taskListResponse;
     }
 
-    public function buildTaskJsonResponse(Task $task, UserTaskSettings $userSettings, Task $root): JsonResponse
+    public function buildTaskJsonResponse(Task $task): JsonResponse
     {
-        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task, $userSettings, $root));
+        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task));
     }
 
-    private function buildTaskResponse(Task $task, UserTaskSettings $userSettings, Task $root): array
+    private function buildTaskResponse(Task $task): array
     {
         $reminder = $task->getReminder();
         $createdAt = $task->getCreatedAt();
@@ -56,24 +48,17 @@ class TaskResponseBuilder
             'id' => $task->getId(),
             'title' => $task->getTitle(),
             'description' => $task->getDescription(),
-            'parent' => $this->getParentId($task, $root),
+            'parent' => $this->buildTaskParentResponse($task),
             'link' => $task->getLink(),
             'reminder' => $reminder?->getTimestamp(),
             'createdAt' => $createdAt?->getTimestamp(),
-            'status' => $task->getStatus(),
-            'trackedTime' => $task->getTrackedTime(),
-            'childrenTrackedTime' => $task->getChildrenTrackedTime(),
-            'isAdditionalPanelOpen' => $userSettings->getIsAdditionalPanelOpen(),
-            'isChildrenOpen' => $userSettings->getIsChildrenOpen()
+            'status' => $task->getStatus()
         ];
     }
 
-    private function getParentId(Task $task, Task $root): ?int
+    private function getParentId(Task $task): ?int
     {
-        if (null === $task->getParent()) {
-            return null;
-        }
-        if ($task->getParent()->equals($root)) {
+        if ($task->getLvl() < 2) {
             return null;
         }
         return $task->getParent()->getId();
@@ -88,12 +73,35 @@ class TaskResponseBuilder
         ];
     }
 
-    public function buildActiveTaskResponse(TrackedPeriod $activePeriod, TaskCollection $path): array
+    public function buildTaskParentResponse(Task $task): ?array
+    {
+        $parent = $task->getParent();
+        if ($parent->isNamespace()) {
+            return null;
+        }
+        return [
+            'id' => $parent->getId(),
+            'title' => $parent->getTitle()
+        ];
+    }
+
+    public function buildParentResponse(Task $parent): ?array
+    {
+        if ($parent->isNamespace()) {
+            return null;
+        }
+        return [
+            'id' => $parent->getId(),
+            'title' => $parent->getTitle(),
+            'parent' => $this->getParentId($parent)
+        ];
+    }
+
+    public function buildNamespaceResponse(Task $namespace): array
     {
         return [
-            'task' => $activePeriod->getTask()->getId(),
-            'trackedTime' => time() - $activePeriod->getStartedAt()->getTimestamp(),
-            'path' => $path->getIds()
+            'id' => $namespace->getId(),
+            'title' => $namespace->getTitle()
         ];
     }
 }

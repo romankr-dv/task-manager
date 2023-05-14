@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from "../../../App/Button";
+import Button from "../../../App/Common/Button";
 import './ActionTask.scss';
 import {Link} from "react-router-dom";
 import Helper from "../../../App/Helper";
-import OpenIcon from "../../../App/OpenIcon";
+import OpenIcon from "../../../App/Common/OpenIcon";
 
 const ActionTask = ({task}) => {
   const writeToClipboard = () => navigator.clipboard.writeText(task.title);

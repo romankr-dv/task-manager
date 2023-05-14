@@ -43,6 +43,9 @@ const Helper = new function () {
         url = '/' + parts.join('/');
       }
       if (taskId) {
+        if (url === '/') {
+          url = url + 'tasks'
+        }
         url = '/' + taskId + url;
       }
       return url;
@@ -51,21 +54,9 @@ const Helper = new function () {
       const url = Config.apiUrlPrefix + '/tasks/new';
       return Helper.fetchJsonPost(url, {'parent': parent});
     },
-    fetchTaskStart(taskId) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/start';
-      return Helper.fetchJsonPost(url);
-    },
-    fetchTaskFinish(taskId) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/finish';
-      return Helper.fetchJsonPost(url);
-    },
     fetchTaskEdit(taskId, params) {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit';
       return Helper.fetchJsonPost(url, params)
-    },
-    fetchTaskEditSettings(taskId, params) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit/settings';
-      return Helper.fetchJsonPost(url, params);
     },
     fetchTaskDelete(taskId) {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/delete';

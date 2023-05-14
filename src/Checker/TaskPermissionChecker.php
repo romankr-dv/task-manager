@@ -17,13 +17,8 @@ class TaskPermissionChecker
         return $this->check($user, $task);
     }
 
-    public function canTrackTask(User $user, Task $task): bool
-    {
-        return $this->check($user, $task);
-    }
-
     private function check(User $user, Task $task): bool
     {
-        return $user->equals($task->getUser()) && null !== $task->getParent();
+        return $user->equals($task->getUser()) && !$task->isNamespace();
     }
 }

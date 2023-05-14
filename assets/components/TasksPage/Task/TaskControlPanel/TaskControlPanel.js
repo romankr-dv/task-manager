@@ -2,17 +2,15 @@ import React from 'react';
 import TaskStatusField from "./TaskStatusField/TaskStatusField";
 import TaskLinkField from "./TaskLinkField/TaskLinkField";
 import TaskReminderField from "./TaskReminderField/TaskReminderField";
-import './TaskAdditionalPanel.scss';
+import './TaskControlPanel.scss';
 import moment from "moment";
 import TaskDescriptionEditor from "./TaskDescriptionEditor/TaskDescriptionEditor";
-import TaskTimeTrackingButton from "./TaskTimeTrackingButton/TaskTimeTrackingButton"
-import Button from "../../../App/Button";
-import OpenIcon from "../../../App/OpenIcon";
+import Button from "../../../App/Common/Button";
+import OpenIcon from "../../../App/Common/OpenIcon";
 import {Link} from "react-router-dom";
 import Helper from "../../../App/Helper";
 
-const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
-  const onNewTaskClick = () => events.createNewTask(task.id);
+const TaskControlPanel = ({task, statuses, events}) => {
   const onRemoveTaskClick = () => events.removeTask(task.id);
   const createdAt = moment.unix(task.createdAt).format('DD/MM/YYYY HH:mm');
 
@@ -23,8 +21,6 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
         <TaskReminderField task={task} events={events}/>
         <TaskLinkField task={task} events={events}>
           <span className="created-at">{createdAt}</span>
-          <TaskTimeTrackingButton task={task} isActive={isActive} events={events}/>
-          <Button onClick={onNewTaskClick} tooltip="Add sub task"><OpenIcon name="plus"/></Button>
           <Link to={Helper.getHistoryPageUrl(task)}>
             <Button tooltip="View history"><OpenIcon name="clock"/></Button>
           </Link>
@@ -36,4 +32,4 @@ const TaskAdditionalPanel = ({task, isActive, statuses, events}) => {
   );
 }
 
-export default TaskAdditionalPanel;
+export default TaskControlPanel;

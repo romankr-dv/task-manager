@@ -1,12 +1,12 @@
 import React from 'react';
 import './Sidebar.scss';
 import {Link} from "react-router-dom";
-import Icon from "../../App/Icon";
+import Icon from "../../App/Common/Icon";
 import Search from "./Search/Search";
 
 const Sidebar = ({root, onSearch, reminderNumber}) => {
   const showReminderNumber = reminderNumber && reminderNumber > 0;
-  const prefix = root === null ? '' : '/' + root.id;
+  const prefix = root ? '/' + root.id : '';
   return (
     <div className="col-xs-6 col-sm-3 sidebar-offcanvas" role="navigation">
       <ul className="list-group">

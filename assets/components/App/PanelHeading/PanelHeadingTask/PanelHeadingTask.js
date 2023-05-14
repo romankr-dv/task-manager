@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import './PanelHeadingTask.scss';
-import OpenIcon from "../../../App/OpenIcon";
-import Button from "../../Button";
+import OpenIcon from "../../Common/OpenIcon";
+import Button from "../../Common/Button";
 
 const PanelHeadingTask = ({task, backLink}) => {
   return (

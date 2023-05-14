@@ -5,59 +5,54 @@ namespace App\Composer;
 use App\Builder\JsonResponseBuilder;
 use App\Builder\TaskResponseBuilder;
 use App\Collection\TaskCollection;
+use App\Config\TaskConfig;
 use App\Config\TaskStatusConfig;
 use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\TaskRepository;
-use App\Repository\TrackedPeriodRepository;
-use App\Repository\UserTaskSettingsRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\UserTaskSettings;
 
 class TaskResponseComposer
 {
     public function __construct(
         private TaskResponseBuilder $taskResponseBuilder,
         private TaskRepository $taskRepository,
-        private UserTaskSettingsRepository $settingsRepository,
-        private TrackedPeriodRepository $trackedPeriodRepository,
         private TaskStatusConfig $taskStatusConfig,
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
-    public function composeListResponse(User $user, TaskCollection $tasks): JsonResponse
+    public function composeListResponse(TaskCollection $tasks, Task $parent, int $startFrom): JsonResponse
     {
-        $root = $this->findRootTask($user, $tasks);
-        $settings = $this->settingsRepository->findByTasks($tasks);
-        $activePeriod = $this->trackedPeriodRepository->findActivePeriod($user);
-        $reminderNumber = $this->taskRepository->countUserReminders($user);
-        $statusCollection = $this->taskStatusConfig->getStatusCollection();
-        $activeTask = null;
-        if ($activePeriod) {
-            $path = $this->taskRepository->getTaskPath($activePeriod->getTask());
-            $activeTask = $this->taskResponseBuilder->buildActiveTaskResponse($activePeriod, $path);
+        $taskListResponse = $this->taskResponseBuilder->buildTaskListResponse($tasks);
+        $nextStartFrom = $this->getNextStartFrom($tasks, $startFrom);
+        if ($startFrom > 0) {
+            return $this->jsonResponseBuilder->build([
+                'tasks' => $taskListResponse,
+                'startFrom' => $nextStartFrom
+            ]);
         }
+        $reminderNumber = $this->taskRepository->countTaskReminders($parent);
+        $statusCollection = $this->taskStatusConfig->getStatusCollection();
         return $this->jsonResponseBuilder->build([
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
-            'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $settings, $root),
-            'activeTask' => $activeTask,
-            'reminderNumber' => $reminderNumber
+            'tasks' => $taskListResponse,
+            'reminderNumber' => $reminderNumber,
+            'parent' => $this->taskResponseBuilder->buildParentResponse($parent),
+            'namespace' => $this->taskResponseBuilder->buildNamespaceResponse($parent->getRoot()),
+            'startFrom' => $nextStartFrom
         ]);
     }
 
-    public function composeTaskResponse(User $user, Task $task, UserTaskSettings $settings): JsonResponse
+    public function composeTaskResponse(Task $task): JsonResponse
     {
-        $root = $this->taskRepository->findUserRootTask($user);
-        return $this->taskResponseBuilder->buildTaskJsonResponse($task, $settings, $root);
+        return $this->taskResponseBuilder->buildTaskJsonResponse($task);
     }
 
-    private function findRootTask(User $user, TaskCollection $tasks): Task
+    private function getNextStartFrom(TaskCollection $tasks, int $startFrom): ?int
     {
-        foreach ($tasks as $task) {
-            if ($task->getParent() === null) {
-                return $task;
-            }
+        $limit = TaskConfig::LIMIT_PER_REQUEST;
+        if ($tasks->count() < $limit) {
+            return null;
         }
-        return $this->taskRepository->findUserRootTask($user);
+        return $startFrom + $limit;
     }
 }
