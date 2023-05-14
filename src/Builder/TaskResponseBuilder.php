@@ -48,7 +48,7 @@ class TaskResponseBuilder
             'id' => $task->getId(),
             'title' => $task->getTitle(),
             'description' => $task->getDescription(),
-            'parent' => $this->getParentId($task),
+            'parent' => $this->buildTaskParentResponse($task),
             'link' => $task->getLink(),
             'reminder' => $reminder?->getTimestamp(),
             'createdAt' => $createdAt?->getTimestamp(),
@@ -73,6 +73,18 @@ class TaskResponseBuilder
         ];
     }
 
+    public function buildTaskParentResponse(Task $task): ?array
+    {
+        $parent = $task->getParent();
+        if ($parent->isNamespace()) {
+            return null;
+        }
+        return [
+            'id' => $parent->getId(),
+            'title' => $parent->getTitle()
+        ];
+    }
+
     public function buildParentResponse(Task $parent): ?array
     {
         if ($parent->isNamespace()) {
@@ -82,6 +94,14 @@ class TaskResponseBuilder
             'id' => $parent->getId(),
             'title' => $parent->getTitle(),
             'parent' => $this->getParentId($parent)
+        ];
+    }
+
+    public function buildNamespaceResponse(Task $namespace): array
+    {
+        return [
+            'id' => $namespace->getId(),
+            'title' => $namespace->getTitle()
         ];
     }
 }

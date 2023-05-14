@@ -27,7 +27,8 @@ class TaskResponseComposer
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
             'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks),
             'reminderNumber' => $reminderNumber,
-            'parent' => $this->taskResponseBuilder->buildParentResponse($parent)
+            'parent' => $this->taskResponseBuilder->buildParentResponse($parent),
+            'namespace' => $this->taskResponseBuilder->buildNamespaceResponse($parent->getRoot())
         ]);
     }
 
