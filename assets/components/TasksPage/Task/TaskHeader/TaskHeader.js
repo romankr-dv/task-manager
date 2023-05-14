@@ -1,6 +1,6 @@
 import React from 'react';
 import './TaskHeader.scss';
-import TaskPanelViewButton from "./TaskPanelViewButton/TaskPanelViewButton";
+import TaskControlPanelButton from "./TaskControlPanelButton/TaskControlPanelButton";
 import TaskTitle from "./TaskTitle/TaskTitle";
 import TaskLink from "./TaskLink/TaskLink";
 import TaskPageButton from "./TaskPageButton/TaskPageButton";
@@ -13,7 +13,7 @@ const TaskHeader = ({task, events}) => {
       <TaskTitle task={task} events={events}/>
       {task.link ? <TaskLink link={task.link}/> : null}
       <TaskPageButton task={task}/>
-      <TaskPanelViewButton task={task} events={events}/>
+      <TaskControlPanelButton task={task} events={events}/>
     </div>
   )
 }

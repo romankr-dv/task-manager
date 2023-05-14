@@ -1,7 +1,7 @@
 import React from 'react';
 import OpenIcon from "../../../../App/Common/OpenIcon";
 
-const TaskPanelViewButton = ({task, events}) => {
+const TaskControlPanelButton = ({task, events}) => {
   const onButtonClick = () => events.updateTaskControlPanelView(task.id, !task.isTaskControlPanelOpen);
   const iconName = task.isTaskControlPanelOpen ? "chevron-top" : "chevron-bottom";
   return (
@@ -11,4 +11,4 @@ const TaskPanelViewButton = ({task, events}) => {
   );
 }
 
-export default TaskPanelViewButton;
+export default TaskControlPanelButton;
