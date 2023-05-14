@@ -40,7 +40,9 @@ class TaskRepository extends NestedTreeRepository
             $queryBuilder->andWhere("t.parent = :parent");
             $queryBuilder->setParameter('parent', $parent);
         }
-        return $queryBuilder->orderBy("t.id", "DESC");
+        $queryBuilder->orderBy("t.lvl", "ASC");
+        $queryBuilder->addOrderBy("t.id", "DESC");
+        return $queryBuilder;
     }
 
     public function findTasks(Task $parent): TaskCollection

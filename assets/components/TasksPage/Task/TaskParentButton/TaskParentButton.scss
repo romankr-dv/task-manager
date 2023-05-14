@@ -1,0 +1,11 @@
+.task {
+    .task-parent {
+        margin-bottom: 8px;
+        display: inline-block;
+        text-decoration: none;
+
+        .glyphicon-tasks {
+            padding-right: 6px;
+        }
+    }
+}
