@@ -33,6 +33,50 @@ class TaskRepository extends NestedTreeRepository
         $this->taskBuilder = $taskBuilder;
     }
 
+    public function findTasks(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
+    {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $this->setSearchParam($queryBuilder, $search);
+        return new TaskCollection($queryBuilder->getQuery()->getResult());
+    }
+
+    public function findTaskReminders(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
+    {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $this->setSearchParam($queryBuilder, $search);
+        $queryBuilder->andWhere("t.reminder < :time");
+        $queryBuilder->setParameter('time', new DateTime());
+        return new TaskCollection($queryBuilder->getQuery()->getResult());
+    }
+
+    public function findTasksByStatus(
+        Task $parent,
+        TaskStatus $status,
+        string $search,
+        int $startFrom,
+        int $limit
+    ): TaskCollection {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $queryBuilder->andWhere("t.status = :status");
+        $queryBuilder->setParameter('status', $status->getId());
+        $this->setSearchParam($queryBuilder, $search);
+        return new TaskCollection($queryBuilder->getQuery()->getResult());
+    }
+
+    public function findTasksByStatusList(
+        Task $parent,
+        TaskStatusCollection $taskStatusCollection,
+        string $search,
+        int $startFrom,
+        int $limit
+    ): TaskCollection {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $queryBuilder->andWhere("t.status IN (:statusList)");
+        $queryBuilder->setParameter('statusList', $taskStatusCollection->getIds());
+        $this->setSearchParam($queryBuilder, $search);
+        return new TaskCollection($queryBuilder->getQuery()->getResult());
+    }
+
     private function prepareTasksQueryBuilder(Task $parent, int $startFrom, int $limit): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('t');
@@ -58,22 +102,6 @@ class TaskRepository extends NestedTreeRepository
         }
     }
 
-    public function findTasks(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
-    {
-        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
-        $this->setSearchParam($queryBuilder, $search);
-        return new TaskCollection($queryBuilder->getQuery()->getResult());
-    }
-
-    public function findTaskReminders(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
-    {
-        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
-        $this->setSearchParam($queryBuilder, $search);
-        $queryBuilder->andWhere("t.reminder < :time");
-        $queryBuilder->setParameter('time', new DateTime());
-        return new TaskCollection($queryBuilder->getQuery()->getResult());
-    }
-
     public function countUserReminders(User $user): int
     {
         $parent = $this->findUserRootTask($user);
@@ -94,34 +122,6 @@ class TaskRepository extends NestedTreeRepository
         $queryBuilder->setParameter('time', new DateTime());
         $queryBuilder->select("count(t.id)");
         return $queryBuilder->getQuery()->getSingleScalarResult();
-    }
-
-    public function findTasksByStatusList(
-        Task $parent,
-        TaskStatusCollection $taskStatusCollection,
-        string $search,
-        int $startFrom,
-        int $limit
-    ): TaskCollection {
-        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
-        $queryBuilder->andWhere("t.status IN (:statusList)");
-        $queryBuilder->setParameter('statusList', $taskStatusCollection->getIds());
-        $this->setSearchParam($queryBuilder, $search);
-        return new TaskCollection($queryBuilder->getQuery()->getResult());
-    }
-
-    public function findTasksByStatus(
-        Task $parent,
-        TaskStatus $status,
-        string $search,
-        int $startFrom,
-        int $limit
-    ): TaskCollection {
-        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
-        $queryBuilder->andWhere("t.status = :status");
-        $queryBuilder->setParameter('status', $status->getId());
-        $this->setSearchParam($queryBuilder, $search);
-        return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
     public function findUserRootTask(User $user): Task
