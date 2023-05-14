@@ -33,23 +33,23 @@ class TaskRepository extends NestedTreeRepository
         $this->taskBuilder = $taskBuilder;
     }
 
-    private function prepareUserTasksQueryBuilder(User $user): QueryBuilder
+    private function prepareUserTasksQueryBuilder(Task $parent): QueryBuilder
     {
         return $this->createQueryBuilder('t')
-            ->andWhere("t.user = :user")
-            ->setParameter('user', $user)
+            ->andWhere("t.parent = :parent")
+            ->setParameter('parent', $parent)
             ->orderBy("t.id", "DESC");
     }
 
-    public function findUserTasks(User $user): TaskCollection
+    public function findTasks(Task $parent): TaskCollection
     {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($user);
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent);
         return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findUserReminders(User $user): TaskCollection
+    public function findUserReminders(Task $parent): TaskCollection
     {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($user);
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent);
         $queryBuilder->andWhere("t.reminder < :time");
         $queryBuilder->setParameter('time', new DateTime());
         return new TaskCollection($queryBuilder->getQuery()->getResult());
@@ -57,35 +57,28 @@ class TaskRepository extends NestedTreeRepository
 
     public function countUserReminders(User $user): int
     {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($user);
+        $root = $this->findUserRootTask($user);
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($root);
         $queryBuilder->andWhere("t.reminder < :time");
         $queryBuilder->setParameter('time', new DateTime());
         $queryBuilder->select("count(t.id)");
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    public function findUserTasksByStatusList(
-        User $user,
-        TaskStatusCollection $taskStatusCollection,
-        bool $fullHierarchy = false
-    ): TaskCollection {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($user);
-        if ($fullHierarchy) {
-            $queryBuilder->distinct();
-            $queryBuilder->join(Task::class, 'c', 'WITH', 'c.user = :user');
-            $queryBuilder->setParameter('user', $user);
-            $where = "t.status IN (:statusList) OR (c.status IN (:statusList) AND t.lft < c.lft AND c.rgt < t.rgt)";
-            $queryBuilder->andWhere($where);
-        } else {
-            $queryBuilder->andWhere("t.status IN (:statusList)");
-        }
+    public function findUserTasksByStatusList(Task $parent, TaskStatusCollection $taskStatusCollection): TaskCollection
+    {
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent);
+        $queryBuilder->andWhere("t.status IN (:statusList)");
         $queryBuilder->setParameter('statusList', $taskStatusCollection->getIds());
         return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findUserTasksByStatus(User $user, TaskStatus $status, bool $fullHierarchy = false): TaskCollection
+    public function findUserTasksByStatus(Task $parent, TaskStatus $status): TaskCollection
     {
-        return $this->findUserTasksByStatusList($user, new TaskStatusCollection([$status]), $fullHierarchy);
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent);
+        $queryBuilder->andWhere("t.status = :status");
+        $queryBuilder->setParameter('status', $status->getId());
+        return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
     public function findUserRootTask(User $user): Task

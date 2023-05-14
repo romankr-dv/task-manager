@@ -56,7 +56,7 @@ const TasksPage = ({title, icon, fetchFrom}) => {
   const events = new function () {
     return {
       fetch: () => {
-        Helper.fetchJson(fetchFrom)
+        Helper.fetchJson(fetchFrom, {'parent': params.root})
           .then(response => {
             const newRoot = findRootTask(params)
             const tasks = response.tasks;
@@ -149,14 +149,6 @@ const TasksPage = ({title, icon, fetchFrom}) => {
           return task;
         }));
       },
-      onRootUpdate: () => {
-        const newRoot = findRootTask(params);
-        setTasks((tasks) => tasks.map(task => {
-          task.autoFocus = false;
-          return task;
-        }));
-        setRoot(composeRootTask(newRoot, root, tasks))
-      },
       onReminderNumberUpdate: () => {
         LocalStorage.setReminderNumber(reminderNumber);
       },
@@ -166,11 +158,10 @@ const TasksPage = ({title, icon, fetchFrom}) => {
     }
   }
 
-  useLayoutEffect(events.fetch, [fetchFrom]);
+  useLayoutEffect(events.fetch, [fetchFrom, params.root]);
   useLayoutEffect(events.onSearchUpdate, [search]);
   useLayoutEffect(events.onReminderNumberUpdate, [reminderNumber]);
   useLayoutEffect(events.onShowCalendarUpdate, [showCalendar]);
-  useLayoutEffect(events.onRootUpdate, [params.root]);
 
   return (
     <Page sidebar={{root: root, onSearch: setSearch, reminderNumber: reminderNumber}}>

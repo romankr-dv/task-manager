@@ -30,35 +30,40 @@ class TaskController extends AbstractController
     ) {}
 
     #[Route('', name: 'app_api_task_all', methods: ['GET'])]
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
-        $tasks = $this->taskRepository->findUserTasks($this->getUser());
+        $parent = $this->getParentFromRequest($request);
+        $tasks = $this->taskRepository->findTasks($parent);
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
     #[Route('/reminders', name: 'app_api_task_reminders', methods: ['GET'])]
-    public function reminders(): JsonResponse
+    public function reminders(Request $request): JsonResponse
     {
-        $tasks = $this->taskRepository->findUserReminders($this->getUser());
+        $parent = $this->getParentFromRequest($request);
+        $tasks = $this->taskRepository->findUserReminders($parent);
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
     #[Route('/todo', name: 'app_api_task_todo', methods: ['GET'])]
-    public function todo(): JsonResponse
+    public function todo(Request $request): JsonResponse
     {
+        $parent = $this->getParentFromRequest($request);
         $statusCollection = $this->taskStatusConfig->getTodoStatusCollection();
-        $tasks = $this->taskRepository->findUserTasksByStatusList($this->getUser(), $statusCollection, true);
+        $tasks = $this->taskRepository->findUserTasksByStatusList($parent, $statusCollection);
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
     #[Route('/status/{status}', name: 'app_api_task_status', methods: ['GET'])]
     public function status(Request $request): JsonResponse
     {
+        $parent = $this->getParentFromRequest($request);
         $statusSlug = $request->attributes->get(self::STATUS_REQUEST_FIELD);
         if (!$this->taskStatusConfig->isStatusSlugExisting($statusSlug)) {
             return $this->jsonResponseBuilder->buildError('Task status not valid');
         }
-        $tasks = $this->taskService->getTasksByStatus($this->getUser(), $statusSlug);
+        $status = $this->taskStatusConfig->getStatusBySlug($statusSlug);
+        $tasks = $this->taskRepository->findUserTasksByStatus($parent, $status);
         return $this->taskResponseComposer->composeListResponse($this->getUser(), $tasks);
     }
 
@@ -79,10 +84,11 @@ class TaskController extends AbstractController
 
     private function getParentFromRequest(Request $request): ?Task
     {
-        if (empty($request->request->get('parent'))) {
+        $parent = $request->request->get('parent', $request->query->get('parent'));
+        if (!$parent) {
             return $this->taskRepository->findUserRootTask($this->getUser());
         }
-        return $this->taskRepository->findOneBy(['id' => $request->request->get('parent')]);
+        return $this->taskRepository->findOneBy(['id' => $parent]);
     }
 
     #[Route('/{id}/edit', name: 'app_api_task_edit', methods: ['POST'])]
@@ -102,7 +108,6 @@ class TaskController extends AbstractController
         if (!$this->taskPermissionChecker->canDeleteTask($this->getUser(), $task)) {
             return $this->jsonResponseBuilder->buildPermissionDenied();
         }
-//        todo: stop period of task, maybe remove it also?
 //        todo: investigate adding csrf token validation
 //        $this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))
         $this->taskService->deleteTask($task);

@@ -4,10 +4,8 @@ namespace App\Service;
 
 use App\Builder\HistoryActionBuilder;
 use App\Builder\TaskBuilder;
-use App\Collection\TaskCollection;
 use App\Composer\HistoryActionMessageComposer;
 use App\Config\HistoryActionConfig;
-use App\Config\TaskStatusConfig;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
@@ -18,19 +16,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class TaskService
 {
     public function __construct(
-        private TaskStatusConfig $taskStatusConfig,
         private TaskRepository $taskRepository,
         private EntityManagerInterface $entityManager,
         private TaskBuilder $taskBuilder,
         private HistoryActionBuilder $historyActionBuilder,
         private HistoryActionMessageComposer $historyActionMessageComposer
     ) {}
-
-    public function getTasksByStatus(User $user, string $statusSlug): TaskCollection
-    {
-        $status = $this->taskStatusConfig->getStatusBySlug($statusSlug);
-        return $this->taskRepository->findUserTasksByStatus($user, $status);
-    }
 
     public function createTask(User $user, Task $parent): Task
     {
