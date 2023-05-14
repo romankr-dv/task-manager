@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.scss';
 import {Link} from "react-router-dom";
-import Icon from "../../App/Icon";
+import Icon from "../../App/Common/Icon";
 
 const Header = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.scss';
 import {Link} from "react-router-dom";
-import Icon from "../../App/Icon";
+import Icon from "../../App/Common/Icon";
 import Search from "./Search/Search";
 
 const Sidebar = ({root, onSearch, reminderNumber}) => {

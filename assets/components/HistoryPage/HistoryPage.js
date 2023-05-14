@@ -2,12 +2,12 @@ import React, {useLayoutEffect, useState} from 'react';
 import Helper from "../App/Helper";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
-import Icon from "../App/Icon";
+import Icon from "../App/Common/Icon";
 import LocalStorage from "../App/LocalStorage";
 import ActionList from "./ActionList/ActionList";
 import {useParams} from "react-router-dom";
 import HistoryPanelHeading from "./HistoryPanelHeading/HistoryPanelHeading";
-import LazyLoading from "../App/LazyLoading";
+import LazyLoading from "../App/Common/LazyLoading";
 
 const HistoryPage = () => {
   const title = "History";

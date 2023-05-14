@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import Helper from "../../../../App/Helper";
-import OpenIcon from "../../../../App/OpenIcon";
+import OpenIcon from "../../../../App/Common/OpenIcon";
 
 const TaskPageButton = ({task}) => {
   return (

@@ -4,7 +4,7 @@ import Config from "./../App/Config";
 import TasksPage from "../TasksPage/TasksPage";
 import SettingsPage from "../SettingsPage/SettingsPage";
 import './App.scss';
-import Icon from "./Icon";
+import Icon from "./Common/Icon";
 import HistoryPage from "../HistoryPage/HistoryPage";
 
 const App = () => {

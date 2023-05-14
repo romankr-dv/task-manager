@@ -1,9 +1,9 @@
 import React from 'react';
 import Helper from "../../App/Helper";
 import PanelHeading from "../../App/PanelHeading/PanelHeading";
-import Button from "../../App/Button";
+import Button from "../../App/Common/Button";
 import PanelHeadingTask from "../../App/PanelHeading/PanelHeadingTask/PanelHeadingTask";
-import OpenIcon from "../../App/OpenIcon";
+import OpenIcon from "../../App/Common/OpenIcon";
 
 const TaskPanelHeading = ({title, icon, root, events}) => {
   const renderPanelHeadingTask = (root) => {

@@ -5,8 +5,8 @@ import TaskReminderField from "./TaskReminderField/TaskReminderField";
 import './TaskControlPanel.scss';
 import moment from "moment";
 import TaskDescriptionEditor from "./TaskDescriptionEditor/TaskDescriptionEditor";
-import Button from "../../../App/Button";
-import OpenIcon from "../../../App/OpenIcon";
+import Button from "../../../App/Common/Button";
+import OpenIcon from "../../../App/Common/OpenIcon";
 import {Link} from "react-router-dom";
 import Helper from "../../../App/Helper";
 

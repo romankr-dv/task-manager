@@ -1,5 +1,5 @@
 import React from 'react';
-import OpenIcon from "../../../../App/OpenIcon";
+import OpenIcon from "../../../../App/Common/OpenIcon";
 
 const TaskPanelViewButton = ({task, events}) => {
   const onButtonClick = () => events.updateTaskControlPanelView(task.id, !task.isTaskControlPanelOpen);
