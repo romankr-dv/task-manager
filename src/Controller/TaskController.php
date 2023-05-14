@@ -33,53 +33,57 @@ class TaskController extends AbstractController
     #[Route('', name: 'app_api_task_all', methods: ['GET'])]
     public function all(Request $request): JsonResponse
     {
-        $parent = $this->getTaskParent($request);
-        $startFrom = $this->getStartFrom($request);
+        $parent = $this->getTaskParentParam($request);
+        $startFrom = $this->getStartFromParam($request);
+        $search = $this->getSearchParam($request);
         $limit = TaskConfig::LIMIT_PER_REQUEST;
-        $tasks = $this->taskRepository->findTasks($parent, $startFrom, $limit);
+        $tasks = $this->taskRepository->findTasks($parent, $search, $startFrom, $limit);
         return $this->taskResponseComposer->composeListResponse($tasks, $parent, $startFrom);
     }
 
     #[Route('/reminders', name: 'app_api_task_reminders', methods: ['GET'])]
     public function reminders(Request $request): JsonResponse
     {
-        $parent = $this->getTaskParent($request);
-        $startFrom = $this->getStartFrom($request);
+        $parent = $this->getTaskParentParam($request);
+        $startFrom = $this->getStartFromParam($request);
+        $search = $this->getSearchParam($request);
         $limit = TaskConfig::LIMIT_PER_REQUEST;
-        $tasks = $this->taskRepository->findUserReminders($parent, $startFrom, $limit);
+        $tasks = $this->taskRepository->findTaskReminders($parent, $search, $startFrom, $limit);
         return $this->taskResponseComposer->composeListResponse($tasks, $parent, $startFrom);
     }
 
     #[Route('/todo', name: 'app_api_task_todo', methods: ['GET'])]
     public function todo(Request $request): JsonResponse
     {
-        $parent = $this->getTaskParent($request);
-        $startFrom = $this->getStartFrom($request);
+        $parent = $this->getTaskParentParam($request);
+        $startFrom = $this->getStartFromParam($request);
+        $search = $this->getSearchParam($request);
         $limit = TaskConfig::LIMIT_PER_REQUEST;
         $statusCollection = $this->taskStatusConfig->getTodoStatusCollection();
-        $tasks = $this->taskRepository->findUserTasksByStatusList($parent, $statusCollection, $startFrom, $limit);
+        $tasks = $this->taskRepository->findTasksByStatusList($parent, $statusCollection, $search, $startFrom, $limit);
         return $this->taskResponseComposer->composeListResponse($tasks, $parent, $startFrom);
     }
 
     #[Route('/status/{status}', name: 'app_api_task_status', methods: ['GET'])]
     public function status(Request $request): JsonResponse
     {
-        $parent = $this->getTaskParent($request);
-        $startFrom = $this->getStartFrom($request);
+        $parent = $this->getTaskParentParam($request);
+        $startFrom = $this->getStartFromParam($request);
+        $search = $this->getSearchParam($request);
         $limit = TaskConfig::LIMIT_PER_REQUEST;
         $statusSlug = $request->attributes->get(self::STATUS_REQUEST_FIELD);
         if (!$this->taskStatusConfig->isStatusSlugExisting($statusSlug)) {
             return $this->jsonResponseBuilder->buildError('Task status not valid');
         }
         $status = $this->taskStatusConfig->getStatusBySlug($statusSlug);
-        $tasks = $this->taskRepository->findUserTasksByStatus($parent, $status, $startFrom, $limit);
+        $tasks = $this->taskRepository->findTasksByStatus($parent, $status, $search, $startFrom, $limit);
         return $this->taskResponseComposer->composeListResponse($tasks, $parent, $startFrom);
     }
 
     #[Route('/new', name: 'app_api_task_new', methods: ['POST'])]
     public function new(Request $request): JsonResponse
     {
-        $parent = $this->getTaskParent($request);
+        $parent = $this->getTaskParentParam($request);
         if (null === $parent) {
             return $this->jsonResponseBuilder->buildError('Parent task not found');
         }
@@ -91,7 +95,7 @@ class TaskController extends AbstractController
         return $this->taskResponseComposer->composeTaskResponse($task);
     }
 
-    private function getTaskParent(Request $request): ?Task
+    private function getTaskParentParam(Request $request): ?Task
     {
         $parent = $request->request->get('parent', $request->query->get('parent'));
         if (!$parent) {
@@ -100,9 +104,14 @@ class TaskController extends AbstractController
         return $this->taskRepository->findOneBy(['id' => $parent]);
     }
 
-    private function getStartFrom(Request $request): int
+    private function getStartFromParam(Request $request): int
     {
         return (int) max($request->query->get('startFrom'), 0);
+    }
+
+    private function getSearchParam(Request $request): string
+    {
+        return (string) $request->query->get('search');
     }
 
     #[Route('/{id}/edit', name: 'app_api_task_edit', methods: ['POST'])]

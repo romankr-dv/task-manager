@@ -26,7 +26,7 @@ const TasksPage = ({title, icon, fetchFrom}) => {
       fetch: () => {
         if (!fetching) {
           setFetching(true);
-          Helper.fetchJson(fetchFrom, {'parent': params.root})
+          Helper.fetchJson(fetchFrom, {'parent': params.root, 'search': search})
             .then(response => {
               setStatuses(response.statuses);
               setTasks(response.tasks);
@@ -40,7 +40,7 @@ const TasksPage = ({title, icon, fetchFrom}) => {
       loadMore: () => {
         if (!fetching) {
           setFetching(true);
-          Helper.fetchJson(fetchFrom, {'parent': params.root, 'startFrom': startFrom})
+          Helper.fetchJson(fetchFrom, {'parent': params.root, 'search': search, 'startFrom': startFrom})
             .then(response => {
               setTasks([...tasks, ...response.tasks]);
               setStartFrom(response.startFrom);
@@ -140,7 +140,7 @@ const TasksPage = ({title, icon, fetchFrom}) => {
     }
   }
 
-  useLayoutEffect(events.fetch, [fetchFrom, params.root]);
+  useLayoutEffect(events.fetch, [fetchFrom, params.root, search]);
   useLayoutEffect(events.onSearchUpdate, [search]);
   useLayoutEffect(events.onReminderNumberUpdate, [reminderNumber]);
   useLayoutEffect(events.onShowCalendarUpdate, [showCalendar]);

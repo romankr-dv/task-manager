@@ -33,7 +33,7 @@ class TaskRepository extends NestedTreeRepository
         $this->taskBuilder = $taskBuilder;
     }
 
-    private function prepareUserTasksQueryBuilder(Task $parent, int $startFrom, int $limit): QueryBuilder
+    private function prepareTasksQueryBuilder(Task $parent, int $startFrom, int $limit): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('t');
         if ($parent->isNamespace()) {
@@ -50,15 +50,25 @@ class TaskRepository extends NestedTreeRepository
         return $queryBuilder;
     }
 
-    public function findTasks(Task $parent, int $startFrom, int $limit): TaskCollection
+    private function setSearchParam(QueryBuilder $queryBuilder, string $search): void
     {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent, $startFrom, $limit);
+        if (!empty($search)) {
+            $queryBuilder->andWhere('t.title LIKE :search OR t.link LIKE :search');
+            $queryBuilder->setParameter('search', "%$search%");
+        }
+    }
+
+    public function findTasks(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
+    {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $this->setSearchParam($queryBuilder, $search);
         return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findUserReminders(Task $parent, int $startFrom, int $limit): TaskCollection
+    public function findTaskReminders(Task $parent, string $search, int $startFrom, int $limit): TaskCollection
     {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent, $startFrom, $limit);
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
+        $this->setSearchParam($queryBuilder, $search);
         $queryBuilder->andWhere("t.reminder < :time");
         $queryBuilder->setParameter('time', new DateTime());
         return new TaskCollection($queryBuilder->getQuery()->getResult());
@@ -86,23 +96,31 @@ class TaskRepository extends NestedTreeRepository
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    public function findUserTasksByStatusList(
+    public function findTasksByStatusList(
         Task $parent,
         TaskStatusCollection $taskStatusCollection,
+        string $search,
         int $startFrom,
         int $limit
     ): TaskCollection {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent, $startFrom, $limit);
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
         $queryBuilder->andWhere("t.status IN (:statusList)");
         $queryBuilder->setParameter('statusList', $taskStatusCollection->getIds());
+        $this->setSearchParam($queryBuilder, $search);
         return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
-    public function findUserTasksByStatus(Task $parent, TaskStatus $status, int $startFrom, int $limit): TaskCollection
-    {
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent, $startFrom, $limit);
+    public function findTasksByStatus(
+        Task $parent,
+        TaskStatus $status,
+        string $search,
+        int $startFrom,
+        int $limit
+    ): TaskCollection {
+        $queryBuilder = $this->prepareTasksQueryBuilder($parent, $startFrom, $limit);
         $queryBuilder->andWhere("t.status = :status");
         $queryBuilder->setParameter('status', $status->getId());
+        $this->setSearchParam($queryBuilder, $search);
         return new TaskCollection($queryBuilder->getQuery()->getResult());
     }
 
