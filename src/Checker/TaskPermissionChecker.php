@@ -19,6 +19,6 @@ class TaskPermissionChecker
 
     private function check(User $user, Task $task): bool
     {
-        return $user->equals($task->getUser()) && null !== $task->getParent();
+        return $user->equals($task->getUser()) && !$task->isNamespace();
     }
 }

@@ -7,7 +7,6 @@ use App\Builder\TaskResponseBuilder;
 use App\Collection\TaskCollection;
 use App\Config\TaskStatusConfig;
 use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\TaskRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -20,22 +19,20 @@ class TaskResponseComposer
         private JsonResponseBuilder $jsonResponseBuilder
     ) {}
 
-    public function composeListResponse(User $user, TaskCollection $tasks, Task $parent): JsonResponse
+    public function composeListResponse(TaskCollection $tasks, Task $parent): JsonResponse
     {
-        $root = $this->taskRepository->findUserRootTask($user);
-        $reminderNumber = $this->taskRepository->countUserReminders($user);
+        $reminderNumber = $this->taskRepository->countTaskReminders($parent);
         $statusCollection = $this->taskStatusConfig->getStatusCollection();
         return $this->jsonResponseBuilder->build([
             'statuses' => $this->taskResponseBuilder->buildStatusListResponse($statusCollection),
-            'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks, $root),
+            'tasks' => $this->taskResponseBuilder->buildTaskListResponse($tasks),
             'reminderNumber' => $reminderNumber,
-            'parent' => $this->taskResponseBuilder->buildParentResponse($parent, $root)
+            'parent' => $this->taskResponseBuilder->buildParentResponse($parent)
         ]);
     }
 
-    public function composeTaskResponse(User $user, Task $task): JsonResponse
+    public function composeTaskResponse(Task $task): JsonResponse
     {
-        $root = $this->taskRepository->findUserRootTask($user);
-        return $this->taskResponseBuilder->buildTaskJsonResponse($task, $root);
+        return $this->taskResponseBuilder->buildTaskJsonResponse($task);
     }
 }

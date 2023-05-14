@@ -23,26 +23,24 @@ class TaskResponseBuilder
         return $statusListResponse;
     }
 
-    public function buildTaskListResponse(
-        TaskCollection $tasks,
-        Task $root
-    ): array {
+    public function buildTaskListResponse(TaskCollection $tasks): array
+    {
         $taskListResponse = [];
         foreach ($tasks as $task) {
-            if ($task->getParent() === null) {
+            if ($task->isNamespace()) {
                 continue;
             }
-            $taskListResponse[] = $this->buildTaskResponse($task, $root);
+            $taskListResponse[] = $this->buildTaskResponse($task);
         }
         return $taskListResponse;
     }
 
-    public function buildTaskJsonResponse(Task $task, Task $root): JsonResponse
+    public function buildTaskJsonResponse(Task $task): JsonResponse
     {
-        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task, $root));
+        return $this->jsonResponseBuilder->build($this->buildTaskResponse($task));
     }
 
-    private function buildTaskResponse(Task $task, Task $root): array
+    private function buildTaskResponse(Task $task): array
     {
         $reminder = $task->getReminder();
         $createdAt = $task->getCreatedAt();
@@ -50,7 +48,7 @@ class TaskResponseBuilder
             'id' => $task->getId(),
             'title' => $task->getTitle(),
             'description' => $task->getDescription(),
-            'parent' => $this->getParentId($task, $root),
+            'parent' => $this->getParentId($task),
             'link' => $task->getLink(),
             'reminder' => $reminder?->getTimestamp(),
             'createdAt' => $createdAt?->getTimestamp(),
@@ -58,12 +56,9 @@ class TaskResponseBuilder
         ];
     }
 
-    private function getParentId(Task $task, Task $root): ?int
+    private function getParentId(Task $task): ?int
     {
-        if (null === $task->getParent()) {
-            return null;
-        }
-        if ($task->getParent()->equals($root)) {
+        if ($task->getLvl() < 2) {
             return null;
         }
         return $task->getParent()->getId();
@@ -78,15 +73,15 @@ class TaskResponseBuilder
         ];
     }
 
-    public function buildParentResponse(Task $parent, Task $root): ?array
+    public function buildParentResponse(Task $parent): ?array
     {
-        if ($parent->equals($root)) {
+        if ($parent->isNamespace()) {
             return null;
         }
         return [
             'id' => $parent->getId(),
             'title' => $parent->getTitle(),
-            'parent' => $this->getParentId($parent, $root)
+            'parent' => $this->getParentId($parent)
         ];
     }
 }

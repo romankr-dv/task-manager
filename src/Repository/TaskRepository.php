@@ -35,10 +35,12 @@ class TaskRepository extends NestedTreeRepository
 
     private function prepareUserTasksQueryBuilder(Task $parent): QueryBuilder
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere("t.parent = :parent")
-            ->setParameter('parent', $parent)
-            ->orderBy("t.id", "DESC");
+        $queryBuilder = $this->createQueryBuilder('t');
+        if (!$parent->isNamespace()) {
+            $queryBuilder->andWhere("t.parent = :parent");
+            $queryBuilder->setParameter('parent', $parent);
+        }
+        return $queryBuilder->orderBy("t.id", "DESC");
     }
 
     public function findTasks(Task $parent): TaskCollection
@@ -57,8 +59,13 @@ class TaskRepository extends NestedTreeRepository
 
     public function countUserReminders(User $user): int
     {
-        $root = $this->findUserRootTask($user);
-        $queryBuilder = $this->prepareUserTasksQueryBuilder($root);
+        $parent = $this->findUserRootTask($user);
+        return $this->countTaskReminders($parent);
+    }
+
+    public function countTaskReminders(Task $parent): int
+    {
+        $queryBuilder = $this->prepareUserTasksQueryBuilder($parent);
         $queryBuilder->andWhere("t.reminder < :time");
         $queryBuilder->setParameter('time', new DateTime());
         $queryBuilder->select("count(t.id)");

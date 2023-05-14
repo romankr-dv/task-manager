@@ -175,6 +175,11 @@ class Task
         $this->lvl = $lvl;
     }
 
+    public function isNamespace(): bool
+    {
+        return $this->lvl == 0;
+    }
+
     public function getRgt(): int
     {
         return $this->rgt;
