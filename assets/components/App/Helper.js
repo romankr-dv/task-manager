@@ -54,14 +54,6 @@ const Helper = new function () {
       const url = Config.apiUrlPrefix + '/tasks/new';
       return Helper.fetchJsonPost(url, {'parent': parent});
     },
-    fetchTaskStart(taskId) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/start';
-      return Helper.fetchJsonPost(url);
-    },
-    fetchTaskFinish(taskId) {
-      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/finish';
-      return Helper.fetchJsonPost(url);
-    },
     fetchTaskEdit(taskId, params) {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/edit';
       return Helper.fetchJsonPost(url, params)
