@@ -16,6 +16,10 @@ body {
     overflow-x: hidden;
 }
 
+.panel-body {
+    min-height: 110px;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     /*font-family: 'Lato', sans-serif !important;*/
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;

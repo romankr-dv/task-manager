@@ -29,42 +29,42 @@ const App = () => {
 
 const Reminders = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/reminders";
-  return <TasksPage title="Reminders" icon={<Icon name="bell"/>} fetchFrom={fetchFrom} nested={false}/>
+  return <TasksPage title="Reminders" icon={<Icon name="bell"/>} fetchFrom={fetchFrom}/>
 }
 
 const Todo = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/todo";
-  return <TasksPage title="Todo" icon={<Icon name="flash"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="Todo" icon={<Icon name="flash"/>} fetchFrom={fetchFrom}/>
 }
 
 const InProgress = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/status/progress";
-  return <TasksPage title="In Progress" icon={<Icon name="flag"/>} fetchFrom={fetchFrom} nested={false}/>
+  return <TasksPage title="In Progress" icon={<Icon name="flag"/>} fetchFrom={fetchFrom}/>
 }
 
 const Frozen = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/status/frozen";
-  return <TasksPage title="Frozen" icon={<Icon name="certificate"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="Frozen" icon={<Icon name="certificate"/>} fetchFrom={fetchFrom}/>
 }
 
 const Potential = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/status/potential";
-  return <TasksPage title="Potential" icon={<Icon name="calendar"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="Potential" icon={<Icon name="calendar"/>} fetchFrom={fetchFrom}/>
 }
 
 const Cancelled = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/status/cancelled";
-  return <TasksPage title="Cancelled" icon={<Icon name="remove"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="Cancelled" icon={<Icon name="remove"/>} fetchFrom={fetchFrom}/>
 }
 
 const Completed = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks/status/completed";
-  return <TasksPage title="Completed" icon={<Icon name="ok"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="Completed" icon={<Icon name="ok"/>} fetchFrom={fetchFrom}/>
 }
 
 const AllTasks = () => {
   let fetchFrom = Config.apiUrlPrefix + "/tasks";
-  return <TasksPage title="All Tasks" icon={<Icon name="list-alt"/>} fetchFrom={fetchFrom} nested={true}/>
+  return <TasksPage title="All Tasks" icon={<Icon name="list-alt"/>} fetchFrom={fetchFrom}/>
 }
 
 export default App;

@@ -2,15 +2,14 @@ import React, {useLayoutEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import Config from "./../App/Config";
 import Helper from "./../App/Helper";
-import TaskListWrapper from "./TaskListWrapper/TaskListWrapper";
 import TaskPanelHeading from "./TaskPanelHeading/TaskPanelHeading";
 import Page from "../App/Page";
 import PanelBody from "../App/PanelBody/PanelBody";
-import TaskPanelFooter from "./TaskPanelFooter/TaskPanelFooter";
 import TaskReminderCalendar from "./TaskReminderCalendar/TaskReminderCalendar";
 import LocalStorage from "../App/LocalStorage";
+import TaskList from "./TaskList/TaskList";
 
-const TasksPage = ({title, icon, fetchFrom, nested}) => {
+const TasksPage = ({title, icon, fetchFrom}) => {
 
   const findRootTask = (params) => {
     if (!params.root || !params.root.match(new RegExp('^[0-9]+$'))) {
@@ -34,9 +33,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
     return checkRootTask(tasks.find(parent => parent.id === task.parent), root, tasks);
   }
   const isTaskVisible = (task, search, tasks, root) => {
-    if (nested && root && !checkRootTask(task, root, tasks)) {
-      return false;
-    }
     if (!search) {
       return true;
     }
@@ -63,10 +59,7 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         Helper.fetchJson(fetchFrom)
           .then(response => {
             const newRoot = findRootTask(params)
-            const tasks = response.tasks.map(task => {
-              task.isHidden = !isTaskVisible(task, search, response.tasks, newRoot);
-              return task;
-            });
+            const tasks = response.tasks;
             setStatuses(response.statuses);
             setTasks(tasks);
             setRoot(composeRootTask(newRoot, root, tasks));
@@ -92,9 +85,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
           .then(task => {
             task.autoFocus = true;
             setTasks(tasks => [task, ...tasks])
-            if (parent !== null) {
-              events.updateTask(parent, {isChildrenOpen: true})
-            }
           });
       },
       removeTask: (id) => {
@@ -139,11 +129,8 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
         events.updateTask(id, {status: status});
         Helper.fetchTaskEdit(id, {'status': status}).then();
       },
-      updateTaskChildrenViewSetting: (id, value) => {
-        events.updateTask(id, {isChildrenOpen: value})
-      },
-      updateTaskAdditionalPanelViewSetting: (id, value) => {
-        events.updateTask(id, {isAdditionalPanelOpen: value})
+      updateTaskControlPanelView: (id, value) => {
+        events.updateTask(id, {isTaskControlPanelOpen: value})
       },
       updateTaskDescription: (id, description, setDescriptionChanging) => {
         setDescriptionChanging(true);
@@ -158,7 +145,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
       },
       onSearchUpdate: () => {
         setTasks((tasks) => tasks.map(task => {
-          task.isHidden = !isTaskVisible(task, search, tasks, root);
           task.autoFocus = false;
           return task;
         }));
@@ -166,7 +152,6 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
       onRootUpdate: () => {
         const newRoot = findRootTask(params);
         setTasks((tasks) => tasks.map(task => {
-          task.isHidden = !isTaskVisible(task, search, tasks, newRoot);
           task.autoFocus = false;
           return task;
         }));
@@ -192,13 +177,11 @@ const TasksPage = ({title, icon, fetchFrom, nested}) => {
       <TaskPanelHeading title={title} icon={icon} root={root} events={events}/>
       {showCalendar ? <TaskReminderCalendar tasks={tasks} statuses={statuses} events={events}/> : null}
       <PanelBody>
-        <TaskListWrapper data={{
+        <TaskList data={{
           root: root,
           tasks: tasks,
-          statuses: statuses,
-          nested: nested
+          statuses: statuses
         }} events={events}/>
-        <TaskPanelFooter tasks={tasks}/>
       </PanelBody>
     </Page>
   );

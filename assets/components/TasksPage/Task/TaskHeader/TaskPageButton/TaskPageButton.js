@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import Helper from "../../../../App/Helper";
 import OpenIcon from "../../../../App/OpenIcon";
 
-const TaskChildrenPageButton = ({task}) => {
+const TaskPageButton = ({task}) => {
   return (
     <Link to={Helper.getTaskPageUrl(task.id)} className="title-button">
       <OpenIcon name="align-center"/>
@@ -11,4 +11,4 @@ const TaskChildrenPageButton = ({task}) => {
   );
 }
 
-export default TaskChildrenPageButton;
+export default TaskPageButton;

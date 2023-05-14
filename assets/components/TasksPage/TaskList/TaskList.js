@@ -1,10 +1,13 @@
 import React from 'react';
 import Task from "../Task/Task";
 
-const TaskList = ({children, data, events}) => {
+const TaskList = ({data, events}) => {
+  if (!data.tasks) {
+    return null;
+  }
   return (
     <div className="tasks">
-      {children.filter(task => !task.isHidden).map(task => {
+      {data.tasks.map(task => {
         return <Task key={task.id} task={task} data={data} events={events}/>
       })}
     </div>
