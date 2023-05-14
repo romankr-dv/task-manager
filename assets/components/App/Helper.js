@@ -43,6 +43,9 @@ const Helper = new function () {
         url = '/' + parts.join('/');
       }
       if (taskId) {
+        if (url === '/') {
+          url = url + 'tasks'
+        }
         url = '/' + taskId + url;
       }
       return url;
