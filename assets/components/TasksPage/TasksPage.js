@@ -38,7 +38,7 @@ const TasksPage = ({title, icon, fetchFrom}) => {
         }
       },
       loadMore: () => {
-        if (!fetching) {
+        if (!fetching && startFrom) {
           setFetching(true);
           Helper.fetchJson(fetchFrom, {'parent': params.root, 'search': search, 'startFrom': startFrom})
             .then(response => {
