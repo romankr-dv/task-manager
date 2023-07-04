@@ -234,4 +234,14 @@ class Task
     {
         $this->description = $description;
     }
+
+    public function isGithubIssue(): bool
+    {
+        return str_contains($this->link, "https://github.com/");
+    }
+
+    public function getGithubIssueNumber(): int
+    {
+        return (int) explode('/', $this->link)[6];
+    }
 }

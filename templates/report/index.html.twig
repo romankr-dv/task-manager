@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report | {{ parent() }}{% endblock %}
+
+{% block body %}
+<style>
+    .task-report {
+        display: inline-block;
+        margin: 20px 25px;
+        padding: 20px 20px;
+        background: white;
+    }
+
+    .task-report ul {
+        margin: 5px 0;
+        padding: 0 20px;
+    }
+</style>
+
+<div class="task-report">
+    Привіт
+    <ul>
+        {% for task in tasks %}
+            <li>
+                {% if task.isGithubIssue %}
+                    <a href="{{ task.link }}">#{{ task.githubIssueNumber }}</a>
+                {% endif %}
+                {{ task.title }}
+            </li>
+        {% endfor %}
+    </ul>
+    Дякую
+</div>
+{% endblock %}
