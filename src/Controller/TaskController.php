@@ -125,6 +125,18 @@ class TaskController extends AbstractController
         return $this->jsonResponseBuilder->build();
     }
 
+    #[Route('/{id}/update-priority', name: 'app_api_task_update_priority', methods: ['POST'])]
+    public function updateTaskPriority(Task $task): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$this->taskPermissionChecker->canEditTask($user, $task)) {
+            return $this->jsonResponseBuilder->buildPermissionDenied();
+        }
+        $this->taskService->updateTaskPriority($task);
+        return $this->jsonResponseBuilder->build();
+    }
+
+
     #[Route('/{id}/delete', name: 'app_api_task_delete', methods: ['POST'])]
     public function delete(Task $task): JsonResponse
     {

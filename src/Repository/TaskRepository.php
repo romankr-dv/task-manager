@@ -87,7 +87,7 @@ class TaskRepository extends NestedTreeRepository
             $queryBuilder->andWhere("t.parent = :parent");
             $queryBuilder->setParameter('parent', $parent);
         }
-        $queryBuilder->orderBy("t.lvl", "ASC");
+        $queryBuilder->orderBy("t.priorityUpdatedAt", "DESC");
         $queryBuilder->addOrderBy("t.id", "DESC");
         $queryBuilder->setFirstResult($startFrom);
         $queryBuilder->setMaxResults($limit);

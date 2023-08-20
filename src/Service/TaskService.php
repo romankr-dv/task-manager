@@ -65,6 +65,13 @@ class TaskService
         $this->entityManager->flush();
     }
 
+    public function updateTaskPriority(Task $task): void
+    {
+        $priorityUpdatedAt = new DateTime();
+        $task->setPriorityUpdatedAt($priorityUpdatedAt);
+        $this->entityManager->flush();
+    }
+
     public function deleteTask(Task $task): void
     {
         $children = $this->taskRepository->findChildren($task);

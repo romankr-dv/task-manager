@@ -62,6 +62,10 @@ const Helper = new function () {
       const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/delete';
       return Helper.fetchJsonPost(url);
     },
+    fetchTaskPriorityUpdate(taskId) {
+      const url = Config.apiUrlPrefix + '/tasks/' + taskId + '/update-priority';
+      return Helper.fetchJsonPost(url);
+    },
     fetchHistory(params) {
       const url = Config.apiUrlPrefix + "/history";
       return Helper.fetchJson(url, params);

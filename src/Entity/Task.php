@@ -72,6 +72,10 @@ class Task
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $priorityUpdatedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -233,5 +237,15 @@ class Task
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getPriorityUpdatedAt(): DateTimeInterface
+    {
+        return $this->priorityUpdatedAt;
+    }
+
+    public function setPriorityUpdatedAt(DateTimeInterface $priorityUpdatedAt): void
+    {
+        $this->priorityUpdatedAt = $priorityUpdatedAt;
     }
 }

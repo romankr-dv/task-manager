@@ -77,7 +77,19 @@ const TasksPage = ({title, icon, fetchFrom}) => {
         Helper.fetchTaskDelete(id)
           .then(() => {
             // todo: remove task children
-            setTasks(tasks => tasks.filter(i => i.id !== id))
+            setTasks(tasks => tasks.filter(task => task.id !== id))
+          })
+      },
+      updateTaskPriority: (id) => {
+        Helper.fetchTaskPriorityUpdate(id)
+          .then(() => {
+            window.scrollTo({ top: 0, left: 0})
+            setTasks(tasks => {
+              const task = tasks.find(task => task.id === id)
+              tasks = tasks.filter(task => task.id !== id);
+              tasks.unshift(task)
+              return tasks
+            })
           })
       },
       updateTaskTitle: (id, title, setTitleChanging) => {

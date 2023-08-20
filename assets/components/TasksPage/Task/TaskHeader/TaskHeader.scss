@@ -56,5 +56,20 @@
             font-size: 13px;
             height: 24px;
         }
+
+        .hidden-title-button {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.2s linear;
+        }
+    }
+}
+
+.task:hover {
+    .task-header {
+        .hidden-title-button {
+            visibility: visible;
+            opacity: 1;
+        }
     }
 }
