@@ -22,8 +22,8 @@ const Header = () => {
         </div>
         <div id="bs-content-row-navbar-collapse-5" className="collapse navbar-collapse">
           <ul className="nav navbar-nav navbar-right">
-            <li className="active"><a href="#">Documentation</a></li>
-            <li className="active"><Link to="/history">History</Link></li>
+            <li><Link to="/tasks/report">Report</Link></li>
+            <li><Link to="/history">History</Link></li>
             <li className="dropdown">
               <a data-toggle="dropdown" className="dropdown-toggle" href="#">
                 <Icon name="user"/> Account <b className="caret"/>

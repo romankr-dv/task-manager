@@ -6,12 +6,14 @@ import SettingsPage from "../SettingsPage/SettingsPage";
 import './App.scss';
 import Icon from "./Common/Icon";
 import HistoryPage from "../HistoryPage/HistoryPage";
+import TasksReportPage from "../TasksReportPage/TasksReportPage";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AllTasks/>}/>
+        <Route path="/tasks/report" element={<TasksReportPage/>}/>
         <Route path="/:root?/tasks/reminders" element={<Reminders/>}/>
         <Route path="/:root?/tasks/todo" element={<Todo/>}/>
         <Route path="/:root?/tasks/status/progress" element={<InProgress/>}/>
